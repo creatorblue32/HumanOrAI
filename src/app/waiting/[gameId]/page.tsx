@@ -4,23 +4,17 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getDatabase, ref, onValue } from 'firebase/database';
 import { initializeApp } from 'firebase/app';
-import database from "../../lib/firebaseConfig";
+import database from "../../../lib/firebaseConfig";
 import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation'
 
 
 
-const WaitingPage = () => {
+const Page = ({ params }: { params: { gameId: string } }) => {
   const router = useRouter();
-
   const searchParams = useSearchParams();
-  const GameID = searchParams.get('gameID'); // Using get method to extract gameID
-
-
+  const GameID = params.gameId;
   console.log(`GameID: ${GameID}`);
-
-
-
 
 
   useEffect(() => {
@@ -32,7 +26,7 @@ const WaitingPage = () => {
       const data = snapshot.val();
       if (data?.status === 'active') {
         // Redirect to the game page when the status changes to 'active'
-        router.push(`/game?gameID=${GameID}`, undefined);
+        router.push(`/game/${GameID}`, undefined);
       }
     });
 
@@ -47,6 +41,6 @@ const WaitingPage = () => {
   );
 };
 
-export default WaitingPage;
+export default Page;
 
 

@@ -46,7 +46,7 @@ const JoinGameCard = () => {
 
     if (existingUserId) {
       console.log('Using existing user-id from local storage for this game code:', existingUserId);
-      router.push(`/waiting?gameID=${gameCode}`, undefined);
+      router.push(`/waiting/${gameCode}`, undefined);
       return;
     }
 
@@ -64,7 +64,7 @@ get(gameCodeRef).then((snapshot) => {
         setUserId(generatedUserId);
         saveUserIdToLocalStorage(gameCode, generatedUserId);
         console.log(`User added to unassigned users as ${generatedUserId}`);
-        router.push(`/waiting?gameID=${gameCode}`, undefined);
+        router.push(`/waiting/${gameCode}`, undefined);
       })
       .catch((error) => console.error(error));
   } else {
