@@ -223,21 +223,21 @@ useEffect(() => {
 
       <h2>Comments</h2>
     <ul>
+    {comments.map((comment, index) => (
+  <div key={index} className="flex items-center"> {/* Added key prop here */}
+    <div style={{ 
+      width: '50px',
+      height: '50px',
+      backgroundColor: 'grey',
+      borderRadius: '50%'
+    }}></div>
+    <div className="comment-text ml-3">
+      <h4 className="text-lg font-semibold">AnonUser</h4>
+      <h5 className="text-md">{comment}</h5>
+    </div>
+  </div>
+))}
 
-    {comments.map((comment) => (
-        <div className=" flex items-center">
-<div style={{ 
-  width: '50px',
-  height: '50px',
-  backgroundColor: 'grey',
-  borderRadius: '50%'
-}}></div>
-          <div className="comment-text ml-3">
-            <h4 className="text-lg font-semibold">AnonUser</h4>
-            <h5 className="text-md">{comment}</h5>
-          </div>
-        </div>
-      ))}
 
     </ul>
 
