@@ -224,7 +224,7 @@ useEffect(() => {
       <h2>Comments</h2>
     <ul>
 
-    {comments.map((comment, index) => (
+    {comments.map((comment) => (
         <div className=" flex items-center">
 <div style={{ 
   width: '50px',
@@ -233,7 +233,7 @@ useEffect(() => {
   borderRadius: '50%'
 }}></div>
           <div className="comment-text ml-3">
-            <h4 className="text-lg font-semibold">AnonUser{(index+1)}</h4>
+            <h4 className="text-lg font-semibold">AnonUser</h4>
             <h5 className="text-md">{comment}</h5>
           </div>
         </div>
