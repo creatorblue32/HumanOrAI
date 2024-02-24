@@ -52,7 +52,8 @@ useEffect(() => {
   };
 
   const updateActiveBool = (playerStatus: string) => {
-    //HERE WE HAVE TO DISPLAY THE COMMENTS
+    //HERE WE HAVE TO DISPLAY ANY PREVIOUS COMMENTS
+
     
     if(playerStatus == "active"){
       console.log("Updated Active Bool to True");
@@ -131,7 +132,7 @@ useEffect(() => {
         const list = sequenceString.split(",");
         const index = list.indexOf(gameInfo.userId) + 1;
 
-        if (index >= list.length()){
+        if (index >= list.length){
             router.push(`/gameOver/${gameInfo.gameId}`, undefined);
         }
         else{
