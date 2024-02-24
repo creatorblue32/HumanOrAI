@@ -162,7 +162,7 @@ useEffect(() => {
         const index = list.indexOf(gameInfo.userId) + 1;
         console.log(index);
 
-        if (index >= list.length-1){
+        if (index >= list.length){
           console.log("Game is over. ");
             router.push(`/gameOver/${gameInfo.gameId}/${gameInfo.groupName}`, undefined);
         }
