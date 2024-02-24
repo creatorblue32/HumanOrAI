@@ -169,17 +169,9 @@ useEffect(() => {
         else{
           console.log(list.length)
           console.log("Game is NOT  over. ");
-
-          if (list[index] == "AI"){
-            const path2model = `games/${gameInfo.gameId}/groups/${gameInfo.groupName}/model`;
-            const path2Modelref = ref(database,path2model);
-            set(path2Modelref,"active");
-          }
-          else {
             const path2next = `games/${gameInfo.gameId}/groups/${gameInfo.groupName}/users/${list[index]}/state`;
             const nextRef = ref(database,path2next);
             set(nextRef,"active");
-          }
 
         }
 
@@ -214,30 +206,23 @@ useEffect(() => {
 
   return (
     <div>
-      <h1>Game Information</h1>
-      <p>GameID: {gameInfo.gameId}</p>
-      <p>UserID: {gameInfo.userId}</p>
-      <p>PlayerStatus: {gameInfo.playerStatus}</p>
-      <p>GroupName: {gameInfo.groupName}</p> {/* Display the group name */}
-
-
       <h2>Comments</h2>
     <ul>
-    {comments.map((comment, index) => (
-  <div key={index} className="flex items-center"> {/* Added key prop here */}
-    <div style={{ 
-      width: '50px',
-      height: '50px',
-      backgroundColor: 'grey',
-      borderRadius: '50%'
-    }}></div>
-    <div className="comment-text ml-3">
-      <h4 className="text-lg font-semibold">AnonUser</h4>
-      <h5 className="text-md">{comment}</h5>
-    </div>
-  </div>
-))}
 
+    {comments.map((comment) => (
+        <div className=" flex items-center">
+<div style={{ 
+  width: '50px',
+  height: '50px',
+  backgroundColor: 'grey',
+  borderRadius: '50%'
+}}></div>
+          <div className="comment-text ml-3">
+            <h4 className="text-lg font-semibold">AnonUser{}</h4>
+            <h5 className="text-md">{comment}</h5>
+          </div>
+        </div>
+      ))}
 
     </ul>
 
