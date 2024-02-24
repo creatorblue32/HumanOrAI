@@ -16,6 +16,32 @@ interface GameInfo {
   comment: string
 }
 
+async function fetchComments(gameId: string, groupName: string): Promise<void> {
+  // Reference to the Firebase Realtime Database
+  const dbRef = ref(getDatabase());
+
+  try {
+    // Path to the users based on gameId and groupName
+    const path = `games/${gameId}/groups/${groupName}/users`;
+
+    // Fetching data from the specified path
+    const snapshot = await get(child(dbRef, path));
+
+    if (snapshot.exists()) {
+      const users = snapshot.val();
+      // Displaying each user's comment on a separate line
+      Object.values(users).forEach((user: any) => {
+        console.log(user.comment);
+      });
+    } else {
+      console.log("No data available");
+    }
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+}
+
+
 const Page = ({ params }: { params: { gameId: string } }) => {
   const [gameInfo, setGameInfo] = useState<GameInfo>({ gameId: '', userId: '', playerStatus: '', groupName: '', comment: ''});
   const [activeBool, setActiveBool] = useState(true); // Initially disabled
@@ -56,12 +82,14 @@ useEffect(() => {
 
     
     if(playerStatus == "active"){
+      fetchComments(gameInfo.gameId, gameInfo.groupName);
       console.log("Updated Active Bool to True");
     }
     else{
       console.log("Updated to false. ");
     }
     setActiveBool(playerStatus !== "active"); // Button is enabled only if status is 'active'
+    
   };
 
 
@@ -142,12 +170,12 @@ useEffect(() => {
           console.log("Game is NOT  over. ");
 
           if (list[index] == "AI"){
-            const path2model = `games/${gameInfo.gameId}/groups/${gameInfo.groupName}/users/${list[index]}/status`;
+            const path2model = `games/${gameInfo.gameId}/groups/${gameInfo.groupName}/model`;
             const path2Modelref = ref(database,path2model);
             set(path2Modelref,"active");
           }
           else {
-            const path2next = `games/${gameInfo.gameId}/groups/${gameInfo.groupName}/users/${list[index]}/status`;
+            const path2next = `games/${gameInfo.gameId}/groups/${gameInfo.groupName}/users/${list[index]}/state`;
             const nextRef = ref(database,path2next);
             set(nextRef,"active");
           }
