@@ -168,7 +168,7 @@ useEffect(() => {
         }
         else{
           console.log(list.length)
-          console.log("Game is NOT  over. ");
+          console.log("Game is NOT over. ");
             const path2next = `games/${gameInfo.gameId}/groups/${gameInfo.groupName}/users/${list[index]}/state`;
             const nextRef = ref(database,path2next);
             set(nextRef,"active");
@@ -210,19 +210,22 @@ useEffect(() => {
     <ul>
 
     {comments.map((comment) => (
-        <div className=" flex items-center">
-<div style={{ 
-  width: '50px',
-  height: '50px',
-  backgroundColor: 'grey',
-  borderRadius: '50%'
-}}></div>
-          <div className="comment-text ml-3">
-            <h4 className="text-lg font-semibold">AnonUser{}</h4>
-            <h5 className="text-md">{comment}</h5>
-          </div>
-        </div>
-      ))}
+  comment !== "" && ( // Only proceed if comment.text is not an empty string
+    <div key={comment} className="flex items-center">
+      <div style={{ 
+        width: '50px',
+        height: '50px',
+        backgroundColor: 'grey',
+        borderRadius: '50%'
+      }}></div>
+      <div className="comment-text ml-3">
+        <h4 className="text-lg font-semibold">AnonUser</h4>
+        <h5 className="text-md">{comment}</h5>
+      </div>
+    </div>
+  )
+))}
+
 
     </ul>
 
