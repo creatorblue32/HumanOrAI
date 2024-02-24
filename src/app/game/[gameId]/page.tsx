@@ -22,6 +22,7 @@ async function fetchComments(gameId: string, groupName: string): Promise<string[
   console.log("Fetched Comments!");
   try {
     const path = `games/${gameId}/groups/${groupName}/users`;
+    console.log(path);
     const snapshot = await get(child(dbRef, path));
 
     if (snapshot.exists()) {
@@ -67,14 +68,22 @@ useEffect(() => {
           ...prevGameInfo,
           playerStatus
         }));
-        updateActiveBool(playerStatus);
+        updateActiveBool(playerStatus, gameId, groupName);
       }
     });
+
+
+
   };
 
-  const updateActiveBool = async (playerStatus: string) => {
+  const updateActiveBool = async (playerStatus: string, gameId: string, groupName: string) => {
     if (playerStatus == "active") {
-      const fetchedComments = await fetchComments(gameInfo.gameId, gameInfo.groupName);
+      console.log("Player is active. ");
+      console.log("Group Name: ");
+      console.log(groupName);
+      const fetchedComments = await fetchComments(gameId, groupName);
+      console.log("FETCHED COMMENTS:");
+      console.log(fetchedComments);
       setComments(fetchedComments); // Update the comments state with fetched comments
       console.log("Updated Active Bool to True");
     } else {
@@ -215,10 +224,24 @@ useEffect(() => {
       <h2>Comments</h2>
     <ul>
 
-      {comments.map((comment, index) => (
-        <li key={index}>{comment}</li>
+    {comments.map((comment, index) => (
+        <div className=" flex items-center">
+<div style={{ 
+  width: '50px',
+  height: '50px',
+  backgroundColor: 'grey',
+  borderRadius: '50%'
+}}></div>
+          <div className="comment-text ml-3">
+            <h4 className="text-lg font-semibold">AnonUser{(index+1)}</h4>
+            <h5 className="text-md">{comment}</h5>
+          </div>
+        </div>
       ))}
+
     </ul>
+
+
     <div className="flex w-full max-w-sm items-center space-x-2">
       <Input 
       type="text" 
