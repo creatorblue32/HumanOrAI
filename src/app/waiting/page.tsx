@@ -42,7 +42,7 @@ const WaitingPage = () => {
 
   return (
     <div>
-      Hold on! We're waiting for game {GameID} to begin...
+      Hold on! Waiting for game {GameID} to begin...
     </div>
   );
 };
