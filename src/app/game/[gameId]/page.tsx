@@ -16,31 +16,25 @@ interface GameInfo {
   comment: string
 }
 
-async function fetchComments(gameId: string, groupName: string): Promise<void> {
-  // Reference to the Firebase Realtime Database
-  const dbRef = ref(getDatabase());
-
+async function fetchComments(gameId: string, groupName: string): Promise<string[]> {
+  const dbRef = ref(database);
+  let commentsArray: string[] = []; // Initialize an empty array to store comments
+  console.log("Fetched Comments!");
   try {
-    // Path to the users based on gameId and groupName
     const path = `games/${gameId}/groups/${groupName}/users`;
-
-    // Fetching data from the specified path
     const snapshot = await get(child(dbRef, path));
 
     if (snapshot.exists()) {
       const users = snapshot.val();
-      // Displaying each user's comment on a separate line
-      Object.values(users).forEach((user: any) => {
-        console.log(user.comment);
-      });
+      commentsArray = Object.values(users).map((user: any) => user.comment); // Collect comments
     } else {
       console.log("No data available");
     }
   } catch (error) {
     console.error("Error fetching data:", error);
   }
+  return commentsArray; // Return the array of comments
 }
-
 
 const Page = ({ params }: { params: { gameId: string } }) => {
   const [gameInfo, setGameInfo] = useState<GameInfo>({ gameId: '', userId: '', playerStatus: '', groupName: '', comment: ''});
@@ -49,6 +43,7 @@ const Page = ({ params }: { params: { gameId: string } }) => {
   const gameId = params.gameId;
 
   const [comment, setComment] = useState('');
+  const [comments, setComments] = useState<string[]>([]); // Add this line
 
 
 
@@ -77,20 +72,17 @@ useEffect(() => {
     });
   };
 
-  const updateActiveBool = (playerStatus: string) => {
-    //HERE WE HAVE TO DISPLAY ANY PREVIOUS COMMENTS
-
-    
-    if(playerStatus == "active"){
-      fetchComments(gameInfo.gameId, gameInfo.groupName);
+  const updateActiveBool = async (playerStatus: string) => {
+    if (playerStatus == "active") {
+      const fetchedComments = await fetchComments(gameInfo.gameId, gameInfo.groupName);
+      setComments(fetchedComments); // Update the comments state with fetched comments
       console.log("Updated Active Bool to True");
+    } else {
+      console.log("Updated to false.");
     }
-    else{
-      console.log("Updated to false. ");
-    }
-    setActiveBool(playerStatus !== "active"); // Button is enabled only if status is 'active'
-    
+    setActiveBool(playerStatus !== "active");
   };
+  
 
 
   const displayGameInfo = async () => {
@@ -163,7 +155,7 @@ useEffect(() => {
 
         if (index >= list.length-1){
           console.log("Game is over. ");
-            router.push(`/gameOver/${gameInfo.gameId}`, undefined);
+            router.push(`/gameOver/${gameInfo.gameId}/${gameInfo.groupName}`, undefined);
         }
         else{
           console.log(list.length)
@@ -219,15 +211,25 @@ useEffect(() => {
       <p>PlayerStatus: {gameInfo.playerStatus}</p>
       <p>GroupName: {gameInfo.groupName}</p> {/* Display the group name */}
 
-      <div className="flex w-full max-w-sm items-center space-x-2">
+
+      <h2>Comments</h2>
+    <ul>
+
+      {comments.map((comment, index) => (
+        <li key={index}>{comment}</li>
+      ))}
+    </ul>
+    <div className="flex w-full max-w-sm items-center space-x-2">
       <Input 
       type="text" 
-       placeholder={activeBool ? "Enter your comment!" : "Wait your turn.."} 
+       placeholder={activeBool ? "Wait your turn..." : "Enter your comment!"} 
        value={comment} 
      onChange={(e) => setComment(e.target.value)} 
 />
         <Button type="button" onClick={handleSubmit} disabled={activeBool}>Submit</Button>
       </div>
+
+
 
     </div>
   );
