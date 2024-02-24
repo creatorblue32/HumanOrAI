@@ -131,11 +131,16 @@ useEffect(() => {
         
         const list = sequenceString.split(",");
         const index = list.indexOf(gameInfo.userId) + 1;
+        console.log(index);
 
-        if (index >= list.length){
+        if (index >= list.length-1){
+          console.log("Game is over. ");
             router.push(`/gameOver/${gameInfo.gameId}`, undefined);
         }
         else{
+          console.log(list.length)
+          console.log("Game is NOT  over. ");
+
           if (list[index] == "AI"){
             const path2model = `games/${gameInfo.gameId}/groups/${gameInfo.groupName}/users/${list[index]}/status`;
             const path2Modelref = ref(database,path2model);
@@ -149,11 +154,9 @@ useEffect(() => {
 
         }
 
-        
-
-
-
+      
       } else {
+        console.log(path2);
         console.log('No sequence');
       }
     }).catch((error) => {
