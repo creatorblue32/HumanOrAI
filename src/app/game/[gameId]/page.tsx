@@ -5,6 +5,7 @@ import { ref, get, child, push, set, onValue, off, getDatabase} from 'firebase/d
 import { useSearchParams } from 'next/navigation';
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { useRouter } from 'next/navigation';
 
 
 interface GameInfo {
@@ -18,7 +19,7 @@ interface GameInfo {
 const Page = ({ params }: { params: { gameId: string } }) => {
   const [gameInfo, setGameInfo] = useState<GameInfo>({ gameId: '', userId: '', playerStatus: '', groupName: '', comment: ''});
   const [activeBool, setActiveBool] = useState(true); // Initially disabled
-
+  const router = useRouter();
   const gameId = params.gameId;
 
   const [comment, setComment] = useState('');
@@ -51,6 +52,8 @@ useEffect(() => {
   };
 
   const updateActiveBool = (playerStatus: string) => {
+    //HERE WE HAVE TO DISPLAY THE COMMENTS
+    
     if(playerStatus == "active"){
       console.log("Updated Active Bool to True");
     }
@@ -125,7 +128,27 @@ useEffect(() => {
         const sequenceString = snapshot.val();
         console.log(sequenceString); 
         
-        //SET THE NEXT USER TO ACTIVE. IF IT'S AI, CALL THAT
+        const list = sequenceString.split(",");
+        const index = list.indexOf(gameInfo.userId) + 1;
+
+        if (index >= list.length()){
+            router.push(`/gameOver/${gameInfo.gameId}`, undefined);
+        }
+        else{
+          if (list[index] == "AI"){
+            const path2model = `games/${gameInfo.gameId}/groups/${gameInfo.groupName}/users/${list[index]}/status`;
+            const path2Modelref = ref(database,path2model);
+            set(path2Modelref,"active");
+          }
+          else {
+            const path2next = `games/${gameInfo.gameId}/groups/${gameInfo.groupName}/users/${list[index]}/status`;
+            const nextRef = ref(database,path2next);
+            set(nextRef,"active");
+          }
+
+        }
+
+        
 
 
 
@@ -165,7 +188,12 @@ useEffect(() => {
       <p>GroupName: {gameInfo.groupName}</p> {/* Display the group name */}
 
       <div className="flex w-full max-w-sm items-center space-x-2">
-        <Input type="text" placeholder="Enter your comment!" value={comment} onChange={(e) => setComment(e.target.value)} />
+      <Input 
+      type="text" 
+       placeholder={activeBool ? "Enter your comment!" : "Wait your turn.."} 
+       value={comment} 
+     onChange={(e) => setComment(e.target.value)} 
+/>
         <Button type="button" onClick={handleSubmit} disabled={activeBool}>Submit</Button>
       </div>
 
