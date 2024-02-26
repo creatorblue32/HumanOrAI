@@ -3,6 +3,14 @@ import { useEffect, useState } from "react";
 import { ref, push, child, get, set } from "firebase/database";
 import database from "../lib/firebaseConfig";
 import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { useRouter } from 'next/navigation';
 
@@ -79,11 +87,20 @@ get(gameCodeRef).then((snapshot) => {
 
   return (
     <div>
-      <h1>Join Game:</h1>
-      <div className="flex w-full max-w-sm items-center space-x-2">
+      <Card className="w-[350px]">
+      <CardHeader>
+        <CardTitle>Join Game:</CardTitle>
+        <CardDescription>Enter the class code your teacher gave you!</CardDescription>
+      </CardHeader>
+      <CardContent>
+      <div className="grid w-full items-center gap-4">
         <Input type="text" placeholder="Enter Game Code" value={gameCode} onChange={(e) => setGameCode(e.target.value)} />
-        <Button type="button" onClick={handleSubmit}>Submit</Button>
       </div>
+      </CardContent>
+      <CardFooter>
+      <Button type="button" onClick={handleSubmit}>Submit</Button>
+      </CardFooter>
+    </Card>
     </div>
   );
 };

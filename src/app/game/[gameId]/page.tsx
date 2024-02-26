@@ -170,6 +170,8 @@ useEffect(() => {
           console.log(list.length)
           console.log("Game is NOT over. ");
             const path2next = `games/${gameInfo.gameId}/groups/${gameInfo.groupName}/users/${list[index]}/state`;
+            console.log("AI NOW. Path:");
+            console.log(path2next);
             const nextRef = ref(database,path2next);
             set(nextRef,"active");
 
