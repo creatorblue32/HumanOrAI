@@ -164,17 +164,18 @@ useEffect(() => {
 
         if (index >= list.length){
           console.log("Game is over. ");
-            router.push(`/gameOver/${gameInfo.gameId}/${gameInfo.groupName}`, undefined);
+          const path2next = `games/${gameInfo.gameId}/groups/${gameInfo.groupName}/status`;
+          set(ref(database, path2next),"voting")
+          router.push(`/voting/${gameInfo.gameId}/${gameInfo.groupName}`, undefined);
         }
         else{
-          console.log(list.length)
           console.log("Game is NOT over. ");
             const path2next = `games/${gameInfo.gameId}/groups/${gameInfo.groupName}/users/${list[index]}/state`;
             console.log("AI NOW. Path:");
             console.log(path2next);
             const nextRef = ref(database,path2next);
             set(nextRef,"active");
-
+            router.push(`/waitforvoting/${gameInfo.gameId}/${gameInfo.groupName}`, undefined);
         }
 
       
@@ -198,11 +199,6 @@ useEffect(() => {
 
     // Find the index of the searchString in the array
     //const index = list.indexOf(searchString);
-
-
-    
-
-    console.log(comment);
     console.log("Submitted!");
   };
 

@@ -94,7 +94,7 @@ get(gameCodeRef).then((snapshot) => {
       </CardHeader>
       <CardContent>
       <div className="grid w-full items-center gap-4">
-        <Input type="text" placeholder="Enter Game Code" value={gameCode} onChange={(e) => setGameCode(e.target.value)} />
+        <Input type="text" placeholder="" value={gameCode} onChange={(e) => setGameCode(e.target.value)} />
       </div>
       </CardContent>
       <CardFooter>
