@@ -7,6 +7,16 @@ import { initializeApp } from 'firebase/app';
 import database from "../../../lib/firebaseConfig";
 import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+ 
+
 
 
 
@@ -35,8 +45,19 @@ const Page = ({ params }: { params: { gameId: string } }) => {
   }, [GameID, router]);
 
   return (
-    <div>
-      Hold on! Waiting for game {GameID} to begin...
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+    <Card className="w-[350px]">
+      <CardHeader>
+      <CardTitle>Hold on!</CardTitle>
+      <CardDescription>Waiting for game {GameID} to begin...</CardDescription>
+
+</CardHeader>
+    <CardContent>
+    <div className="flex justify-center items-center">
+    <div className="spinner"></div>
+  </div></CardContent>
+      </Card>
+
     </div>
   );
 };

@@ -6,7 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useRouter } from 'next/navigation';
-
+import CommentSection from "@/components/commentSection"
 
 interface GameInfo {
   gameId: string,
@@ -42,9 +42,9 @@ const Page = ({ params }: { params: { gameId: string } }) => {
   const [activeBool, setActiveBool] = useState(true); // Initially disabled
   const router = useRouter();
   const gameId = params.gameId;
-
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState<string[]>([]); // Add this line
+  const [groupName, setGroupName] = useState('');
 
 
 
@@ -118,6 +118,7 @@ useEffect(() => {
           const playerStatus = userSnapshot.val().state || null;
           if (playerStatus && groupName) {
             setGameInfo({ gameId, userId, playerStatus, groupName, comment });
+            setGroupName(groupName);
             setupPlayerStatusListener(gameId, userId, groupName); // Setup listener
             return; // Exit after setting up listener
           }
@@ -203,26 +204,10 @@ useEffect(() => {
   };
 
   return (
-    <div>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
       <h2>Comments</h2>
     <ul>
-
-    {comments.map((comment) => (
-  comment !== "" && ( // Only proceed if comment.text is not an empty string
-    <div key={comment} className="flex items-center">
-      <div style={{ 
-        width: '50px',
-        height: '50px',
-        backgroundColor: 'grey',
-        borderRadius: '50%'
-      }}></div>
-      <div className="comment-text ml-3">
-        <h4 className="text-lg font-semibold">AnonUser</h4>
-        <h5 className="text-md">{comment}</h5>
-      </div>
-    </div>
-  )
-))}
+    <CommentSection gameId={gameId} groupName={groupName} />
 
 
     </ul>
@@ -237,7 +222,6 @@ useEffect(() => {
 />
         <Button type="button" onClick={handleSubmit} disabled={activeBool}>Submit</Button>
       </div>
-
 
 
     </div>
