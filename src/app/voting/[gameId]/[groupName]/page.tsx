@@ -57,6 +57,7 @@ const Page = ({ params }: { params: { gameId: string, groupName: string } }) => 
     <div>
       <Card>
       <CardHeader>
+      <h1 className="text-xl">Which one do you think is AI?</h1>
       <h2>Comments</h2>
       <ul>
       <CommentSection gameId={gameId} groupName={groupName} />
