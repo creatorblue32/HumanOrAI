@@ -94,6 +94,7 @@ const Page = ({ params }: { params: { gameId: string } }) => {
   
 
     const updateActiveBool = async (playerStatus: string, gameId: string, groupName: string) => {
+      setRefreshKey(oldKey => oldKey + 1); // Update state to trigger re-render
       if (playerStatus == "active") {
         console.log("Player is active. ");
         console.log("Group Name: ");
