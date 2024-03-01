@@ -4,6 +4,15 @@ import { useRouter } from 'next/navigation';
 import { getDatabase, ref, get, child } from 'firebase/database';
 import database from "../../../../lib/firebaseConfig";
 import CommentSection from "@/components/CommentSection"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+
 
 
 
@@ -46,14 +55,14 @@ const Page = ({ params }: { params: { gameId: string, groupName: string } }) => 
 
   return (
     <div>
-      Game {gameId} is OVER!!...
-
+      <Card>
+      <CardHeader>
       <h2>Comments</h2>
       <ul>
       <CommentSection gameId={gameId} groupName={groupName} />
-
-
       </ul>
+      </CardHeader>
+      </Card>
     </div>
   );
 };
