@@ -16,25 +16,33 @@ const CommentSection: React.FC<commentSectionProps> = ({ gameId, groupName }) =>
         // Define the async function inside useEffect with TypeScript
         const fetchComments = async () => {
             const dbRef = ref(database);
-            let commentsArray: string[] = []; // Specifying array of strings for TypeScript
-            console.log("Fetched Comments!");
+            let commentsArray: string[] = [];
             try {
-                const path = `games/${gameId}/groups/${groupName}/users`;
-                console.log(path);
-                const snapshot = await get(child(dbRef, path));
-        
-                if (snapshot.exists()) {
-                    const users = snapshot.val();
-                    commentsArray = Object.values(users).map((user: any) => user.comment as string); // Cast user.comment to string
+              // Fetching the sequence of user IDs
+              const sequencePath = `games/${gameId}/groups/${groupName}/sequence`;
+              const sequenceSnapshot = await get(child(dbRef, sequencePath));
+              let userIds: string[] = [];
+              if (sequenceSnapshot.exists()) {
+                const sequence = sequenceSnapshot.val();
+                userIds = sequence.split(',').filter((id: string) => id !== ''); // Splitting by comma and removing the last empty element if any
+              }
+      
+              // Fetching comments for each user ID in the sequence
+              for (const userId of userIds) {
+                const userPath = `games/${gameId}/groups/${groupName}/users/${userId}/comment`;
+                const commentSnapshot = await get(child(dbRef, userPath));
+                if (commentSnapshot.exists()) {
+                  commentsArray.push(commentSnapshot.val());
                 } else {
-                    console.log("No data available");
+                  commentsArray.push('No comment'); // Default text if there's no comment
                 }
+              }
             } catch (error) {
-                console.error("Error fetching data:", error);
+              console.error("Error fetching data:", error);
             }
             // Update the state with fetched comments
             setComments(commentsArray);
-        };
+          };      
 
         // Call the fetch function
         fetchComments();
@@ -47,10 +55,10 @@ const CommentSection: React.FC<commentSectionProps> = ({ gameId, groupName }) =>
                 comment !== "" && (
                     <div key={index} className="flex items-center">
                         <div style={{ 
-                            width: '50px',
-                            height: '50px',
-                            minWidth: '50px',
-                            minHeight: '50px',
+                            width: '30px',
+                            height: '30px',
+                            minWidth: '30px',
+                            minHeight: '30px',
                             backgroundColor: 'grey',
                             borderRadius: '50%'
                         }}></div>

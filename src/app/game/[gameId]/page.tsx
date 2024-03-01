@@ -58,6 +58,8 @@ const Page = ({ params }: { params: { gameId: string } }) => {
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState<string[]>([]); // Add this line
   const [groupName, setGroupName] = useState('');
+  const [refreshKey, setRefreshKey] = useState(0); // Initial state
+
 
 
 
@@ -88,6 +90,8 @@ const Page = ({ params }: { params: { gameId: string } }) => {
 
 
     };
+
+  
 
     const updateActiveBool = async (playerStatus: string, gameId: string, groupName: string) => {
       if (playerStatus == "active") {
@@ -167,6 +171,9 @@ const Page = ({ params }: { params: { gameId: string } }) => {
     const path2 = `games/${gameInfo.gameId}/groups/${gameInfo.groupName}/sequence`;
     const sequenceRef = ref(database, path2);
 
+    //Refresh Comments
+    setRefreshKey(oldKey => oldKey + 1); // Update state to trigger re-render
+
     get(sequenceRef).then((snapshot) => {
       if (snapshot.exists()) {
         const sequenceString = snapshot.val();
@@ -243,7 +250,10 @@ const Page = ({ params }: { params: { gameId: string } }) => {
           <p>Henle's experience is situated within the burgeoning landscape of "grief tech," a niche but rapidly expanding field that intersects technology and bereavement support. Startups like Replika, HereAfter AI, StoryFile, and Seance AI are at the forefront of this movement, offering a variety of services designed to help individuals navigate their grief. These platforms employ deep learning and large language models to recreate the essence of lost loved ones, providing interactive video conversations, virtual avatars for texting, and audio legacies that aim to preserve the memory and presence of the deceased.</p>
           <br></br>
           <p>Despite the comfort these technologies offer to those like Henle, they also usher in a host of ethical and psychological dilemmas. Questions about the consent of the deceased, the potential for psychological dependency on digital avatars, and the risks of exacerbating grief through artificial prolongation of relationships are at the heart of the debate. Furthermore, the commercialization of grief, with services ranging from affordable subscriptions to premium packages, raises concerns about the exploitation of vulnerable individuals seeking closure.</p>
+          <br></br>
+          Summary adapted from article previously published in Vox News.
           </h5>
+
 
 
           
@@ -255,7 +265,7 @@ const Page = ({ params }: { params: { gameId: string } }) => {
 
             {/* Comment section on one line */}
             <ul>
-              <CommentSection gameId={gameId} groupName={groupName} />
+              <CommentSection gameId={gameId} groupName={groupName} key={refreshKey}/>
             </ul>
 
             {/* Input and Button on the same line */}
