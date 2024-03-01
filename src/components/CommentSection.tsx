@@ -49,12 +49,14 @@ const CommentSection: React.FC<commentSectionProps> = ({ gameId, groupName }) =>
                         <div style={{ 
                             width: '50px',
                             height: '50px',
+                            minWidth: '50px',
+                            minHeight: '50px',
                             backgroundColor: 'grey',
                             borderRadius: '50%'
                         }}></div>
                         <div className="comment-text ml-3">
-                            <h4 className="text-lg font-semibold">AnonUser</h4>
-                            <h5 className="text-md">{comment}</h5>
+                            <h4 className="text-md font-semibold">AnonUser</h4>
+                            <h5 className="text-sm">{comment}</h5>
                         </div>
                     </div>
                 )
