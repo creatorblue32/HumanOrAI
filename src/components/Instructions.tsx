@@ -29,7 +29,7 @@ const Instructions: React.FC<instructionsProps> = ({ gameId }) => {
 
 
             
-            <Card className="h-[600px]" >
+            <Card className="h-[630px]" >
                 <CardContent>
                 <CardTitle className=" mt-6">Instructions to Join:</CardTitle>
  

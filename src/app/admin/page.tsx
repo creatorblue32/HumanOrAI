@@ -7,7 +7,7 @@ import AdminDashboard from '@/components/AdminDashboard';
 
 export default function Page() {
 
-  const gameId = "555";
+  const gameId = "4098";
 
   return (
     <div>
