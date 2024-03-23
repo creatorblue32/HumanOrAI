@@ -61,5 +61,5 @@ class handler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header('Content-type', 'text/json')
         self.end_headers()
-        message = json.dumps({'gameId': '{game_id}'})
+        message = json.dumps({'gameId': str(game_id)})
         self.wfile.write(message.encode())
