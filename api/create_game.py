@@ -27,10 +27,15 @@ class handler(BaseHTTPRequestHandler):
 
         cred = credentials.Certificate(credential_dict)
 
+        if not firebase_admin._apps:
         # Initialize the Firebase app
-        firebase_app = firebase_admin.initialize_app(cred, {
-            'databaseURL': 'https://convo-ea70a-default-rtdb.firebaseio.com'
-        })
+            firebase_app = firebase_admin.initialize_app(cred, {
+                'databaseURL': 'https://convo-ea70a-default-rtdb.firebaseio.com'
+        })        
+        else:
+            firebase_app = firebase_admin.get_app()
+
+
 
 
         #Get Game Index
