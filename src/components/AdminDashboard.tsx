@@ -43,7 +43,7 @@ const AdminDashboard: React.FC<adminProps> = ({ initialGameId }) => {
     const createGame = async () => {
         console.log("Create_game Clicked!")
         try {
-            const response = await fetch('http://humanoraime.vercel.app/api/create_game');
+            const response = await fetch('https://humanoraime.vercel.app/api/create_game');
             const data = await response.json();
             if (data.gameId) {
                 setGameId(data.gameId);
