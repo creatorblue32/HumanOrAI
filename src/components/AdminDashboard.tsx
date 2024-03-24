@@ -22,6 +22,18 @@ import {
     HoverCardTrigger,
 } from "@/components/ui/hover-card"
 
+import {
+    AlertDialog,
+    AlertDialogTrigger,
+    AlertDialogContent,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogCancel,
+    AlertDialogAction,
+} from "@/components/ui/alert-dialog";
+
 
 
 
@@ -38,10 +50,14 @@ const AdminDashboard: React.FC<adminProps> = ({ initialGameId }) => {
     const greyedOutClass = "opacity-50 bg-gray-200";
 
     const [gameId, setGameId] = useState<string | null>(initialGameId);
+    const [isDialogOpen, setIsDialogOpen] = useState(false); // For managing AlertDialog visibility
+    const [isLoading, setIsLoading] = useState(false); // For managing the loading state
+
 
     // Handler function for creating a new game
     const createGame = async () => {
-        console.log("Create_game Clicked!")
+        setIsDialogOpen(true); // Show the dialog
+        setIsLoading(true); // Start loading
         try {
             const response = await fetch('https://humanoraime.vercel.app/api/create_game');
             const data = await response.json();
@@ -52,8 +68,12 @@ const AdminDashboard: React.FC<adminProps> = ({ initialGameId }) => {
             }
         } catch (error) {
             console.error('Error fetching new game ID:', error);
+        } finally {
+            setIsLoading(false); // End loading
+            setIsDialogOpen(false); // Close the dialog
         }
     };
+
 
 
     return (
@@ -113,6 +133,26 @@ const AdminDashboard: React.FC<adminProps> = ({ initialGameId }) => {
                             </div>
                         </div>
                     </div>
+                    {isDialogOpen && (
+                        <AlertDialog>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    {isLoading ? (
+                                        <AlertDialogTitle>Loading...</AlertDialogTitle>
+                                    ) : (
+                                        <AlertDialogTitle>Operation Completed</AlertDialogTitle>
+                                    )}
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    {!isLoading && (
+                                        <AlertDialogAction onClick={() => setIsDialogOpen(false)}>
+                                            Close
+                                        </AlertDialogAction>
+                                    )}
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
+                    )}
                 </CardContent>
             </Card>
         </div>
