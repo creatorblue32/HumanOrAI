@@ -8,6 +8,7 @@ import AdminDashboard from '@/components/AdminDashboard';
 export default function Page() {
 
   const gameId = null;
+  const placeHolderGameId = "4023";
 
   return (
     <div>
@@ -20,9 +21,9 @@ export default function Page() {
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-      <AdminDashboard gameId={gameId}/>
+      <AdminDashboard initialGameId={gameId}/>
       <div className="m-4"></div>
-        <Instructions gameId={gameId} />
+        <Instructions gameId={placeHolderGameId} />
       </div>
 
       {/* Footer */}
