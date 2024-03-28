@@ -1,13 +1,10 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
 
-export default nextConfig;
-
-module.exports = {
+const nextConfig = {
     async headers() {
       return [
         {
-          // matching all API routes
+          // Matching all API routes
           source: "/api/:path*",
           headers: [
             { key: "Access-Control-Allow-Credentials", value: "true" },
@@ -19,3 +16,6 @@ module.exports = {
       ]
     }
   };
+  
+  export default nextConfig;
+  
