@@ -74,6 +74,7 @@ const AdminDashboard: React.FC<adminProps> = ({ initialGameId }) => {
     const greyedOutClass = "text-gray-200";
 
     const [gameId, setGameId] = useState<string | null>(initialGameId);
+    const [num_players, setNum_players] = useState<string | null>();
 
     const groups: Group[] = [
         { groupId: 1, progress: 1 },
@@ -101,6 +102,22 @@ const AdminDashboard: React.FC<adminProps> = ({ initialGameId }) => {
             }
         } catch (error) {
             console.error('Error fetching new game ID:', error);
+        }
+    };
+
+    // Handler function for creating a new game
+    const get_num_players = async () => {
+        console.log("num_players requested!")
+        try {
+            const response = await fetch('https://humanoraime.vercel.app/api/num_players?gameId='+gameId);
+            const data = await response.json();
+            if (data.num_players) {
+                setNum_players(data.num_players);
+            } else {
+                console.error('Num players not received');
+            }
+        } catch (error) {
+            console.error('Error fetching new num players:', error);
         }
     };
 
@@ -154,7 +171,7 @@ const AdminDashboard: React.FC<adminProps> = ({ initialGameId }) => {
                                     Current Players<br></br>
                                     <div className="flex items-center justify-center"><h1 className={`text-7xl font-semibold ${gameId ? '' : greyedOutClass}`}>
                                         {gameId ? "28" : "--"}
-                                    </h1> <Button variant="outline"><RefreshCcw className="h-3 w-3"/></Button></div>
+                                    </h1> <Button variant="outline" onClick={get_num_players}><RefreshCcw className="h-3 w-3"/></Button></div>
                                     </div>
                                     <div className="m-3 ml-0">
                                     Game Status<br></br>
