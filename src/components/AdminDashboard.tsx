@@ -161,25 +161,25 @@ const AdminDashboard: React.FC<adminProps> = ({ initialGameId }) => {
                             <h1 className="text-xl font-medium">Actions</h1>
                         </div>
 
-                        <Button variant="outline" disabled={game_status==Status.NoGame} className="h-[100px] mr-2" onClick={createGame}>
+                        <Button variant="outline" disabled={game_status!=Status.NoGame} className="h-[100px] mr-2" onClick={createGame}>
                             <div className="flex flex-col items-center justify-center h-screen">
                                 <div className="mb-2 "><Plus className="stroke-slate-500" /></div>
                                 <div className="text-slate-500">Create Game</div>
                             </div>
                         </Button>
-                        <Button variant="outline" disabled={game_status==Status.Open} className="h-[100px] mr-2" onClick={beginGame}>
+                        <Button variant="outline" disabled={game_status!=Status.Open} className="h-[100px] mr-2" onClick={beginGame}>
                             <div className="flex flex-col items-center justify-center h-screen">
                                 <div className="mb-2 "><Plus className="stroke-slate-500" /></div>
                                 <div className="text-slate-500">Begin Play</div>
                             </div>
                         </Button>
-                        <Button variant="outline" disabled={game_status==Status.Active} className="h-[100px] mr-2" onClick={createGame}>
+                        <Button variant="outline" disabled={game_status!=Status.Active} className="h-[100px] mr-2" onClick={createGame}>
                             <div className="flex flex-col items-center justify-center h-screen">
                                 <div className="mb-2 "><Plus className="stroke-slate-500" /></div>
                                 <div className="text-slate-500">Begin Voting</div>
                             </div>
                         </Button>
-                        <Button variant="outline" disabled={game_status==Status.Voting} className="h-[100px] mr-2" onClick={createGame}>
+                        <Button variant="outline" disabled={game_status!=Status.Voting} className="h-[100px] mr-2" onClick={createGame}>
                             <div className="flex flex-col items-center justify-center h-screen">
                                 <div className="mb-2 "><Plus className="stroke-slate-500" /></div>
                                 <div className="text-slate-500">Archive Game</div>
