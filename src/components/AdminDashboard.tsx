@@ -22,6 +22,7 @@ import {
     HoverCardTrigger,
 } from "@/components/ui/hover-card"
 import { RefreshCcw } from 'lucide-react';
+import { Badge } from "@/components/ui/badge"
 
 
 
@@ -29,39 +30,39 @@ import { RefreshCcw } from 'lucide-react';
 interface Group {
     groupId: number;
     progress: number;
-  }
-  
-  interface GridButtonProps {
-    group: Group;
-  }
+}
 
-  interface GroupsGridProps {
+interface GridButtonProps {
+    group: Group;
+}
+
+interface GroupsGridProps {
     groups: Group[];
-  }
-  
-  const GroupsGrid: React.FC<GroupsGridProps> = ({ groups }) => {
+}
+
+const GroupsGrid: React.FC<GroupsGridProps> = ({ groups }) => {
     return (
-      <div className="grid grid-cols-4 ">
-        {groups.map((group) => (
-          <GridButton key={group.groupId} group={group} />
-        ))}
-      </div>
+        <div className="grid grid-cols-4 ">
+            {groups.map((group) => (
+                <GridButton key={group.groupId} group={group} />
+            ))}
+        </div>
     );
-  };
-  
+};
+
 
 const GridButton: React.FC<GridButtonProps> = ({ group }) => {
     return (
-      <Button variant="outline"
-        className="y-6 x-4 rounded m-1"
-        type="button"
-      >
-        {`${group.progress}`}
-      </Button>
+        <Button variant="outline"
+            className="y-6 x-4 rounded m-1"
+            type="button"
+        >
+            {`${group.progress}`}
+        </Button>
     );
-  };
-  
-enum Status{
+};
+
+enum Status {
     NoGame, Open, Active, Voting, Complete
 }
 
@@ -88,9 +89,9 @@ const AdminDashboard: React.FC<adminProps> = ({ initialGameId }) => {
         { groupId: 6, progress: 5 },
         { groupId: 7, progress: 1 },
         { groupId: 8, progress: 2 },
-      ];
-    
-    
+    ];
+
+
 
     // Handler function for creating a new game
     const createGame = async () => {
@@ -113,7 +114,7 @@ const AdminDashboard: React.FC<adminProps> = ({ initialGameId }) => {
     const get_num_players = async () => {
         console.log("num_players requested!")
         try {
-            const response = await fetch('https://humanoraime.vercel.app/api/num_players?gameId='+gameId);
+            const response = await fetch('https://humanoraime.vercel.app/api/num_players?gameId=' + gameId);
             const data = await response.json();
             if (data.num_players) {
                 setNum_players(data.num_players);
@@ -128,10 +129,10 @@ const AdminDashboard: React.FC<adminProps> = ({ initialGameId }) => {
     const beginGame = async () => {
         console.log("begin_game Clicked!")
         try {
-            const response = await fetch('https://humanoraime.vercel.app/api/begin_game?gameId='+gameId);
+            const response = await fetch('https://humanoraime.vercel.app/api/begin_game?gameId=' + gameId);
             const data = await response.json();
             if (data.success) {
-                if (data.success == true){
+                if (data.success == "True") {
                     set_game_status(Status.Active);
                 }
                 else {
@@ -161,25 +162,25 @@ const AdminDashboard: React.FC<adminProps> = ({ initialGameId }) => {
                             <h1 className="text-xl font-medium">Actions</h1>
                         </div>
 
-                        <Button variant="outline" disabled={game_status!=Status.NoGame} className="h-[100px] mr-2" onClick={createGame}>
+                        <Button variant="secondary" disabled={game_status != Status.NoGame} className="h-[100px] mr-2" onClick={createGame}>
                             <div className="flex flex-col items-center justify-center h-screen">
                                 <div className="mb-2 "><Plus className="stroke-slate-500" /></div>
                                 <div className="text-slate-500">Create Game</div>
                             </div>
                         </Button>
-                        <Button variant="outline" disabled={game_status!=Status.Open} className="h-[100px] mr-2" onClick={beginGame}>
+                        <Button variant="secondary" disabled={game_status != Status.Open} className="h-[100px] mr-2" onClick={beginGame}>
                             <div className="flex flex-col items-center justify-center h-screen">
                                 <div className="mb-2 "><Plus className="stroke-slate-500" /></div>
                                 <div className="text-slate-500">Begin Play</div>
                             </div>
                         </Button>
-                        <Button variant="outline" disabled={game_status!=Status.Active} className="h-[100px] mr-2" onClick={createGame}>
+                        <Button variant="secondary" disabled={game_status != Status.Active} className="h-[100px] mr-2" onClick={createGame}>
                             <div className="flex flex-col items-center justify-center h-screen">
                                 <div className="mb-2 "><Plus className="stroke-slate-500" /></div>
                                 <div className="text-slate-500">Begin Voting</div>
                             </div>
                         </Button>
-                        <Button variant="outline" disabled={game_status!=Status.Voting} className="h-[100px] mr-2" onClick={createGame}>
+                        <Button variant="secondary" disabled={game_status != Status.Voting} className="h-[100px] mr-2" onClick={createGame}>
                             <div className="flex flex-col items-center justify-center h-screen">
                                 <div className="mb-2 "><Plus className="stroke-slate-500" /></div>
                                 <div className="text-slate-500">Archive Game</div>
@@ -199,14 +200,22 @@ const AdminDashboard: React.FC<adminProps> = ({ initialGameId }) => {
                                 </h1>
                                 <div className="flex">
                                     <div className="m-3 ml-0">
-                                    Current Players<br></br>
-                                    <div className="flex items-center justify-center"><h1 className={`text-7xl font-semibold ${gameId ? '' : greyedOutClass}`}>
-                                        {gameId ? num_players : "--"}
-                                    </h1> <Button variant="outline" onClick={get_num_players}><RefreshCcw className="h-3 w-3"/></Button></div>
+                                        Current Players<br></br>
+                                        <div className="flex items-center justify-center"><h1 className={`text-7xl font-semibold ${gameId ? '' : greyedOutClass}`}>
+                                            {gameId ? num_players : "--"}
+                                        </h1> <Button variant="outline" onClick={get_num_players}><RefreshCcw className="h-3 w-3" /></Button></div>
                                     </div>
                                     <div className="m-3 ml-0">
-                                    Game Status<br></br>
-                                    <div className="bg-slate-200 ">No Game Yet.</div>
+                                        Game Status<br></br>
+                                        <Badge variant="secondary" className="text-md mt-3">
+                                        <div>        {{
+                                            [Status.NoGame]: "No Game",
+                                            [Status.Open]: "Open",
+                                            [Status.Active]: "Active",
+                                            [Status.Voting]: "Voting",
+                                            [Status.Complete]: "Complete"
+                                        }[game_status]}
+                                        </div> </Badge>
                                     </div>
                                 </div>
                                 Group Progress<br></br>
