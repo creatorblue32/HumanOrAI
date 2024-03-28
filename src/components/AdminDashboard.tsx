@@ -21,10 +21,46 @@ import {
     HoverCardContent,
     HoverCardTrigger,
 } from "@/components/ui/hover-card"
+import { RefreshCcw } from 'lucide-react';
 
 
 
 
+interface Group {
+    groupId: number;
+    progress: number;
+  }
+  
+  interface GridButtonProps {
+    group: Group;
+  }
+
+  interface GroupsGridProps {
+    groups: Group[];
+  }
+  
+  const GroupsGrid: React.FC<GroupsGridProps> = ({ groups }) => {
+    return (
+      <div className="grid grid-cols-4 ">
+        {groups.map((group) => (
+          <GridButton key={group.groupId} group={group} />
+        ))}
+      </div>
+    );
+  };
+  
+
+const GridButton: React.FC<GridButtonProps> = ({ group }) => {
+    return (
+      <Button variant="outline"
+        className="y-6 x-4 rounded m-1"
+        type="button"
+      >
+        {`${group.progress}`}
+      </Button>
+    );
+  };
+  
 
 
 
@@ -35,9 +71,22 @@ interface adminProps {
 
 const AdminDashboard: React.FC<adminProps> = ({ initialGameId }) => {
     // Define a CSS class for greyed-out content
-    const greyedOutClass = "opacity-50 bg-gray-200";
+    const greyedOutClass = "text-gray-200";
 
     const [gameId, setGameId] = useState<string | null>(initialGameId);
+
+    const groups: Group[] = [
+        { groupId: 1, progress: 1 },
+        { groupId: 2, progress: 3 },
+        { groupId: 3, progress: 2 },
+        { groupId: 4, progress: 6 },
+        { groupId: 5, progress: 4 },
+        { groupId: 6, progress: 5 },
+        { groupId: 7, progress: 1 },
+        { groupId: 8, progress: 2 },
+      ];
+    
+    
 
     // Handler function for creating a new game
     const createGame = async () => {
@@ -70,10 +119,22 @@ const AdminDashboard: React.FC<adminProps> = ({ initialGameId }) => {
                             <h1 className="text-xl font-medium">Actions</h1>
                         </div>
 
-                        <Button variant="outline" className="h-[100px]" onClick={createGame}>
+                        <Button variant="outline" className="h-[100px] mr-2" onClick={createGame}>
                             <div className="flex flex-col items-center justify-center h-screen">
                                 <div className="mb-2 "><Plus className="stroke-slate-500" /></div>
                                 <div className="text-slate-500">Create Game</div>
+                            </div>
+                        </Button>
+                        <Button variant="outline" disabled={true} className="h-[100px] mr-2" onClick={createGame}>
+                            <div className="flex flex-col items-center justify-center h-screen">
+                                <div className="mb-2 "><Plus className="stroke-slate-500" /></div>
+                                <div className="text-slate-500">Begin Play</div>
+                            </div>
+                        </Button>
+                        <Button variant="outline" disabled={true} className="h-[100px] mr-2" onClick={createGame}>
+                            <div className="flex flex-col items-center justify-center h-screen">
+                                <div className="mb-2 "><Plus className="stroke-slate-500" /></div>
+                                <div className="text-slate-500">Skip to Voting</div>
                             </div>
                         </Button>
                     </div>
@@ -83,17 +144,25 @@ const AdminDashboard: React.FC<adminProps> = ({ initialGameId }) => {
                             <h1 className="text-xl font-medium">Game Statistics</h1>
                         </div>
                         <div className="flex space-x-1">
-                            <div className={`flex-1 ${gameId ? '' : greyedOutClass}`}>
+                            <div className={`flex-1`}>
                                 Game ID<br></br>
-                                {/* Display placeholder if gameId is null */}
                                 <h1 className={`text-5xl font-semibold ${gameId ? '' : greyedOutClass}`}>
-                                    {gameId || "N/A"}
+                                    {gameId || "- - - -"}
                                 </h1>
-                                Current Players<br></br>
-                                {/* Grey out or display placeholder based on gameId */}
-                                <h1 className={`text-8xl font-semibold ${gameId ? '' : greyedOutClass}`}>
-                                    {gameId ? "28" : "-"}
-                                </h1>
+                                <div className="flex">
+                                    <div className="m-3 ml-0">
+                                    Current Players<br></br>
+                                    <div className="flex items-center justify-center"><h1 className={`text-7xl font-semibold ${gameId ? '' : greyedOutClass}`}>
+                                        {gameId ? "28" : "--"}
+                                    </h1> <Button variant="outline"><RefreshCcw className="h-3 w-3"/></Button></div>
+                                    </div>
+                                    <div className="m-3 ml-0">
+                                    Game Status<br></br>
+                                    <div className="bg-slate-200 ">No Game Yet.</div>
+                                    </div>
+                                </div>
+                                Group Progress<br></br>
+                                <GroupsGrid groups={groups} />
                             </div>
                             <div className={`flex-1`}>
                                 <h1 className="mb-2">Assigned Article:</h1>
