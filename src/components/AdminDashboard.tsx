@@ -170,7 +170,7 @@ const AdminDashboard: React.FC<adminProps> = ({ initialGameId }) => {
                                     <div className="m-3 ml-0">
                                     Current Players<br></br>
                                     <div className="flex items-center justify-center"><h1 className={`text-7xl font-semibold ${gameId ? '' : greyedOutClass}`}>
-                                        {gameId ? "28" : "--"}
+                                        {gameId ? num_players : "--"}
                                     </h1> <Button variant="outline" onClick={get_num_players}><RefreshCcw className="h-3 w-3"/></Button></div>
                                     </div>
                                     <div className="m-3 ml-0">
