@@ -52,7 +52,7 @@ class handler(BaseHTTPRequestHandler):
         #model = db.reference('/games/'+str(game_id)+"/groups/"+str(group_no)+"/model").get()
 
 
-        db.reference('/games/'+str(game_id)+"/status").set("active")
+        #db.reference('/games/'+str(game_id)+"/status").set("active")
 
         generated_text = ""
                 
