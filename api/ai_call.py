@@ -71,7 +71,7 @@ class handler(BaseHTTPRequestHandler):
                 },
             }
             pre_generated = requests.post(API_URL, headers=headers, json=payload).json()
-            start_index = pre_generated.find("Comment 1 Text:")+15     
+            start_index = pre_generated['generated_text'].find("Comment 1 Text:")+15     
             generated_text = pre_generated[start_index:]
 
         elif model == "LLAMA":
