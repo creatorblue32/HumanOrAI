@@ -85,9 +85,6 @@ class handler(BaseHTTPRequestHandler):
             generated_text = "Unrecognized Model"
                         
         
-        hfapifile = open("/Users/elyasmasrour/Documents/localRepos/convo-ai/secret/huggingfacekey.txt")
-        hfapikey = str(hfapifile.readline().strip())
-
         self.send_response(200)
         self.send_header('Content-type', 'text/json')
         self.end_headers()
