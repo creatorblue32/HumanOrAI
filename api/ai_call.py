@@ -62,7 +62,7 @@ class handler(BaseHTTPRequestHandler):
 
         if model == "GPT-2":
             API_URL = "https://api-inference.huggingface.co/models/openai-community/gpt2"
-            hfapikey = os.environ['HF_API_KEY']
+            hfapikey = os.getenv('HF_API_KEY')
             headers = {"Authorization": "Bearer "+hfapikey}
             payload = {
                 "inputs": prompt,
@@ -76,7 +76,7 @@ class handler(BaseHTTPRequestHandler):
             generated_text = "LLAMA still unimplemented"
             
         if model == "GPT-3.5":
-            openai.api_key = os.environ['OPENAI_API_KEY']
+            openai.api_key = os.getenv('OPENAI_API_KEY')
             response = openai.ChatCompletion.create(model="gpt-3.5-turbo",
                                                 messages=[{"role": "system", "content": ""},
                                                     {"role": "user", "content": prompt}])
