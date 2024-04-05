@@ -71,6 +71,7 @@ class handler(BaseHTTPRequestHandler):
                 },
             }
             generated_text = requests.post(API_URL, headers=headers, json=payload).json()
+            
 
         elif model == "LLAMA":
             generated_text = "LLAMA still unimplemented"
