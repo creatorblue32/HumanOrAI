@@ -67,7 +67,7 @@ class handler(BaseHTTPRequestHandler):
             payload = {
                 "inputs": prompt,
                 "parameters": { 
-                    "max_length": 700,
+                    "max_length": 500,
                 },
             }
             generated_text = requests.post(API_URL, headers=headers, json=payload).json()
