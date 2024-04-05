@@ -75,8 +75,20 @@ class handler(BaseHTTPRequestHandler):
             start_index = recieved_text.find("Comment 1 Text:")+15     
             generated_comment = recieved_text[start_index:]
 
-        elif model == "LLAMA":
-            generated_comment = "LLAMA still unimplemented"
+        elif model == "LLAMA2":
+            API_URL = "https://api-inference.huggingface.co/models/meta-llama/Llama-2-7b-chat-hf"
+            hfapikey = os.getenv('HF_API_KEY')
+            headers = {"Authorization": "Bearer "+hfapikey}
+            payload = {
+                "inputs": prompt,
+                "parameters": { 
+                    "max_length": 500,
+                },
+            }
+            pre_generated = requests.post(API_URL, headers=headers, json=payload).json()
+            recieved_text = pre_generated[0]['generated_text']
+            start_index = recieved_text.find("Comment 1 Text:")+15     
+            generated_comment = recieved_text[start_index:]
             
         elif model == "gpt3.5":
             openai.api_key = os.getenv('OPENAI_API_KEY')
