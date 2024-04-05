@@ -54,7 +54,7 @@ class handler(BaseHTTPRequestHandler):
 
         #db.reference('/games/'+str(game_id)+"/status").set("active")
 
-        generated_text = ""
+        generated_comment = "No Comment"
                 
         prompt = "Social Media Post: News Article Text:"
         prompt += "In the spring of 2023, Sunshine Henle found herself grappling with the profound loss of her 72-year-old mother, who succumbed to organ failure the previous Thanksgiving. Amidst her grief, Henle turned to an unconventional source of comfort: artificial intelligence. Leveraging OpenAI's ChatGPT, she crafted a \"ghostbot\" of her mother, infusing it with their shared text messages to simulate conversations that echoed her mother's voice and wisdom. This innovative approach to coping with her loss proved to be a source of solace for Henle, a Florida-based AI trainer accustomed to the potential of technology to mimic human interactions. Henle's experience is situated within the burgeoning landscape of \"grief tech,\" a niche but rapidly expanding field that intersects technology and bereavement support. Startups like Replika, HereAfter AI, StoryFile, and Seance AI are at the forefront of this movement, offering a variety of services designed to help individuals navigate their grief. These platforms employ deep learning and large language models to recreate the essence of lost loved ones, providing interactive video conversations, virtual avatars for texting, and audio legacies that aim to preserve the memory and presence of the deceased. Despite the comfort these technologies offer to those like Henle, they also usher in a host of ethical and psychological dilemmas. Questions about the consent of the deceased, the potential for psychological dependency on digital avatars, and the risks of exacerbating grief through artificial prolongation of relationships are at the heart of the debate. Furthermore, the commercialization of grief, with services ranging from affordable subscriptions to premium packages, raises concerns about the exploitation of vulnerable individuals seeking closure."
@@ -71,25 +71,25 @@ class handler(BaseHTTPRequestHandler):
                 },
             }
             pre_generated = requests.post(API_URL, headers=headers, json=payload).json()
-            start_index = pre_generated['generated_text'].find("Comment 1 Text:")+15     
-            generated_text = pre_generated[start_index:]
+            recieved_text = pre_generated[0]['generated_text']
+            start_index = recieved_text.find("Comment 1 Text:")+15     
+            generated_comment = recieved_text[start_index:]
 
         elif model == "LLAMA":
-            generated_text = "LLAMA still unimplemented"
+            generated_comment = "LLAMA still unimplemented"
             
         elif model == "gpt3.5":
             openai.api_key = os.getenv('OPENAI_API_KEY')
             response = openai.ChatCompletion.create(model="gpt-3.5-turbo",
                                                 messages=[{"role": "system", "content": ""},
                                                     {"role": "user", "content": prompt}])
-            generated_text = response["choices"][0]["message"]["content"]
+            generated_comment = response["choices"][0]["message"]["content"][1:len(generated_comment)-2]
         else:
-            generated_text = "Unrecognized Model: "
-            generated_text += model
+            generated_comment += model
                         
         
         self.send_response(200)
         self.send_header('Content-type', 'text/json')
         self.end_headers()
-        message = json.dumps({'success': generated_text})
+        message = json.dumps({'success': generated_comment})
         self.wfile.write(message.encode())
