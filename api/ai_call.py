@@ -82,7 +82,8 @@ class handler(BaseHTTPRequestHandler):
                                                     {"role": "user", "content": prompt}])
             generated_text = response["choices"][0]["message"]["content"]
         else:
-            generated_text = "Unrecognized Model"
+            generated_text = "Unrecognized ModelL "
+            generated_text += model
                         
         
         self.send_response(200)
