@@ -23,6 +23,12 @@ import {
 } from "@/components/ui/hover-card"
 import { RefreshCcw } from 'lucide-react';
 import { Badge } from "@/components/ui/badge"
+import { FastForward } from 'lucide-react';
+import { Vote } from 'lucide-react';
+import { Archive } from 'lucide-react';
+
+
+
 
 
 
@@ -136,10 +142,15 @@ const AdminDashboard: React.FC<adminProps> = ({ initialGameId }) => {
                     set_game_status(Status.Active);
                 }
                 else {
-                    console.error("No Success.")
-                }
+                    if (data.success == "False") {
+                        alert("Begin Game Didn't Succeed.");
+                    }
+                    set_game_status(Status.NoGame);
+                    setGameId(null);
+                    setNum_players(null);    
+                } 
             } else {
-                console.error('Nothing Success Signal Recieved');
+                console.error('No Signal about Success Recieved');
             }
         } catch (error) {
             console.error('Error with Fetch.', error);
@@ -170,19 +181,19 @@ const AdminDashboard: React.FC<adminProps> = ({ initialGameId }) => {
                         </Button>
                         <Button variant="secondary" disabled={game_status != Status.Open} className="h-[100px] mr-2" onClick={beginGame}>
                             <div className="flex flex-col items-center justify-center h-screen">
-                                <div className="mb-2 "><Plus className="stroke-slate-500" /></div>
+                                <div className="mb-2 "><FastForward className="stroke-slate-500" /></div>
                                 <div className="text-slate-500">Begin Play</div>
                             </div>
                         </Button>
                         <Button variant="secondary" disabled={game_status != Status.Active} className="h-[100px] mr-2" onClick={createGame}>
                             <div className="flex flex-col items-center justify-center h-screen">
-                                <div className="mb-2 "><Plus className="stroke-slate-500" /></div>
-                                <div className="text-slate-500">Begin Voting</div>
+                                <div className="mb-2 "><Vote className="stroke-slate-500" /></div>
+                                <div className="text-slate-500">Start Voting</div>
                             </div>
                         </Button>
                         <Button variant="secondary" disabled={game_status != Status.Voting} className="h-[100px] mr-2" onClick={createGame}>
                             <div className="flex flex-col items-center justify-center h-screen">
-                                <div className="mb-2 "><Plus className="stroke-slate-500" /></div>
+                                <div className="mb-2 "><Archive className="stroke-slate-500" /></div>
                                 <div className="text-slate-500">Archive Game</div>
                             </div>
                         </Button>
@@ -202,8 +213,8 @@ const AdminDashboard: React.FC<adminProps> = ({ initialGameId }) => {
                                     <div className="m-3 ml-0">
                                         Current Players<br></br>
                                         <div className="flex items-center justify-center"><h1 className={`text-7xl font-semibold ${gameId ? '' : greyedOutClass}`}>
-                                            {gameId ? num_players : "--"}
-                                        </h1> <Button variant="outline" onClick={get_num_players}><RefreshCcw className="h-3 w-3" /></Button></div>
+                                            {gameId ? (num_players ? num_players : "--") : "--"}
+                                        </h1> <Button variant="ghost" onClick={get_num_players}><RefreshCcw className="h-4 w-4" /></Button></div>
                                     </div>
                                     <div className="m-3 ml-0">
                                         Game Status<br></br>
