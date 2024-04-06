@@ -105,7 +105,7 @@ class handler(BaseHTTPRequestHandler):
                 },
             }
             pre_generated = requests.post(api_url, headers=headers, json=payload).json()
-            if pre_generated != list(): #ERROR CASE! will query stable, and log incident in game notes
+            if not isinstance(pre_generated, list): #ERROR CASE! will query stable, and log incident in game notes
                 print("BACKUP: will query stable API GPT-3.5 ... and LOG. ")
                 generated_comment = stable_query()
                 path = f'games/{game_id}/groups/{group_no}/users/AI'
