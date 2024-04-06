@@ -92,13 +92,14 @@ class handler(BaseHTTPRequestHandler):
             payload = {
                 "inputs": prompt,
                 "parameters": { 
-                    "max_length": 500,
+                    "max_length": 50,
+                    "return_full_text": False,
                 },
             }
             pre_generated = requests.post(API_URL, headers=headers, json=payload).json()
             recieved_text = pre_generated[0]['generated_text']
-            start_index = recieved_text.find(new_comment_prompt)+len(new_comment_prompt)   
-            generated_comment = recieved_text[start_index:]
+            #start_index = recieved_text.find(new_comment_prompt)+len(new_comment_prompt)   
+            generated_comment = recieved_text#[start_index:]
 
         elif model == "LLAMA2":
             API_URL = "https://api-inference.huggingface.co/models/meta-llama/Llama-2-7b-chat-hf"
@@ -107,20 +108,21 @@ class handler(BaseHTTPRequestHandler):
             payload = {
                 "inputs": prompt,
                 "parameters": { 
-                    "max_length": 500,
+                    "max_length": 50,
+                    "return_full_text": False,
                 },
             }
             pre_generated = requests.post(API_URL, headers=headers, json=payload).json()
             recieved_text = pre_generated[0]['generated_text']
-            start_index = recieved_text.find(new_comment_prompt)+len(new_comment_prompt)     
-            generated_comment = recieved_text[start_index:]
+            #start_index = recieved_text.find(new_comment_prompt)+len(new_comment_prompt)     
+            generated_comment = recieved_text#[start_index:]
             
         elif model == "GPT-3.5":
             openai.api_key = os.getenv('OPENAI_API_KEY')
             response = openai.ChatCompletion.create(model="gpt-3.5-turbo",
                                                 messages=[{"role": "system", "content": ""},
-                                                    {"role": "user", "content": prompt}])
-            generated_comment = response["choices"][0]["message"]["content"][1:len(generated_comment)-2]
+                                                    {"role": "user", "content": prompt}], max_tokens=50)
+            generated_comment = response["choices"][0]["message"]["content"]
         else:
             generated_comment += model
             
@@ -141,12 +143,11 @@ class handler(BaseHTTPRequestHandler):
             nextUserRef = db.reference(f'games/{game_id}/groups/{group_no}/users/{nextUserId}/state')
             nextUserRef.set("active")
 
-                        
-        
-        self.send_response(200)
-        self.send_header('Content-type', 'text/json')        
-        self.end_headers()
 
-        
-        message = json.dumps({'comment': generated_comment}, {'prompt': prompt})
+        self.send_response(200)
+        self.send_header('Content-type', 'text/json')
+        self.end_headers()
+        message = json.dumps({'prompt response': generated_comment})
         self.wfile.write(message.encode())
+
+                
