@@ -101,7 +101,7 @@ class handler(BaseHTTPRequestHandler):
             payload = {
                 "inputs": prompt,
                 "parameters": { 
-                    "max_length": 50,
+                    "max_new_tokens": 50,
                     "return_full_text": False,
                 },
             }
