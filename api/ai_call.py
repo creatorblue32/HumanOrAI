@@ -7,6 +7,7 @@ import os
 from urllib import parse
 import requests
 import openai
+import builtins
 
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -105,7 +106,7 @@ class handler(BaseHTTPRequestHandler):
                 },
             }
             pre_generated = requests.post(api_url, headers=headers, json=payload).json()
-            if not isinstance(pre_generated, list): #ERROR CASE! will query stable, and log incident in game notes
+            if not isinstance(pre_generated, builtins.list): #ERROR CASE! will query stable, and log incident in game notes
                 print("BACKUP: will query stable API GPT-3.5 ... and LOG. ")
                 generated_comment = stable_query()
                 path = f'games/{game_id}/groups/{group_no}/users/AI'
@@ -140,14 +141,14 @@ class handler(BaseHTTPRequestHandler):
         #MUST SET NEXT PLAYER TO ACTIVE
         dbseqref = db.reference(f'games/{game_id}/groups/{group_no}/sequence')
         dbseq = dbseqref.get()
-        list = dbseq.split(",")
-        newIndex = list.index("AI")
-        if (newIndex >= len(list)-1):
+        playerlist = dbseq.split(",")
+        newIndex = playerlist.index("AI")
+        if (newIndex >= len(playerlist)-1):
             stateref = db.reference(f'games/{game_id}/groups/{group_no}/status')
             stateref.set("voting")
 
         else:
-            nextUserId = list[newIndex+1]
+            nextUserId = playerlist[newIndex+1]
             nextUserRef = db.reference(f'games/{game_id}/groups/{group_no}/users/{nextUserId}/state')
             nextUserRef.set("active")
 
