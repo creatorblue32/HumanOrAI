@@ -91,7 +91,7 @@ const Page = ({ params }: { params: { gameId: string } }) => {
 
     };
 
-  
+
 
     const updateActiveBool = async (playerStatus: string, gameId: string, groupName: string) => {
       setRefreshKey(oldKey => oldKey + 1); // Update state to trigger re-render
@@ -161,6 +161,22 @@ const Page = ({ params }: { params: { gameId: string } }) => {
   }, [gameId]); // Add gameId as a dependency to useEffect
 
 
+  async function queryAI(gameId: string, groupNo: string): Promise<any> {
+    const apiUrl = `/api/ai_call?gameId=${encodeURIComponent(gameId)}&groupNo=${encodeURIComponent(groupNo)}`;
+    try {
+      const response = await fetch(apiUrl);
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Failed to fetch AI data:", error);
+      throw error; 
+    }
+  }
+
+
   const handleSubmit = (): void => {
     gameInfo.comment = comment;
 
@@ -193,7 +209,9 @@ const Page = ({ params }: { params: { gameId: string } }) => {
         else {
           console.log("Game is NOT over. ");
           const path2next = `games/${gameInfo.gameId}/groups/${gameInfo.groupName}/users/${list[index]}/state`;
-          console.log("AI NOW. Path:");
+          if (list[index] == "AI") {
+            queryAI(gameId,groupName);
+          }
           console.log(path2next);
           const nextRef = ref(database, path2next);
           set(nextRef, "active");
@@ -225,39 +243,39 @@ const Page = ({ params }: { params: { gameId: string } }) => {
   };
 
   return (
-<div style={{ 
-  display: 'flex', 
-  justifyContent: 'center', 
-  alignItems: 'center', 
-  minHeight: '100vh', // Allow the container to grow beyond the viewport height
-  paddingTop: '20px', // Adds a 20px buffer at the top inside the container
-  paddingLeft: '10px',
-  paddingRight: '10px',
-  overflowY: 'auto' // Ensure content can scroll vertically
-}}>
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      minHeight: '100vh', // Allow the container to grow beyond the viewport height
+      paddingTop: '20px', // Adds a 20px buffer at the top inside the container
+      paddingLeft: '10px',
+      paddingRight: '10px',
+      overflowY: 'auto' // Ensure content can scroll vertically
+    }}>
       <Card className="w-[500px]">
-      <CardHeader className="flex justify-center items-center">
-      <CardTitle className="flex items-center">
-  <Bot className="mr-1 scale-115" /> {/* Add margin-right to the icon */}
-  <span>Convo</span>
-</CardTitle>
-</CardHeader>        <CardContent><img src='/images/voximage.jpg' alt="Article Image" style={{ borderRadius: '6px' }}></img>
-          <div style={{paddingTop:'10px'}}><h1 className="text-2xl"><strong>The race to optimize grief</strong></h1></div>
-          <div style={{paddingTop:'5px'}}><h2 className="text-la text-gray-600"><em>Startups are selling grief tech, ghostbots, and the end of mourning as we know it.</em></h2></div>
-          <div style={{paddingTop:'10px', paddingBottom:'10px'}}><h3 className="text-sm ">by <u><strong><a href="https://www.vox.com/culture/23965584/grief-tech-ghostbots-ai-startups-replika-ethics">Mihika Agarwal</a></strong></u></h3></div>
+        <CardHeader className="flex justify-center items-center">
+          <CardTitle className="flex items-center">
+            <Bot className="mr-1 scale-115" /> {/* Add margin-right to the icon */}
+            <span>Convo</span>
+          </CardTitle>
+        </CardHeader>        <CardContent><img src='/images/voximage.jpg' alt="Article Image" style={{ borderRadius: '6px' }}></img>
+          <div style={{ paddingTop: '10px' }}><h1 className="text-2xl"><strong>The race to optimize grief</strong></h1></div>
+          <div style={{ paddingTop: '5px' }}><h2 className="text-la text-gray-600"><em>Startups are selling grief tech, ghostbots, and the end of mourning as we know it.</em></h2></div>
+          <div style={{ paddingTop: '10px', paddingBottom: '10px' }}><h3 className="text-sm ">by <u><strong><a href="https://www.vox.com/culture/23965584/grief-tech-ghostbots-ai-startups-replika-ethics">Mihika Agarwal</a></strong></u></h3></div>
           <h5 className="text-sm">
-          <p>In the spring of 2023, Sunshine Henle found herself grappling with the profound loss of her 72-year-old mother, who succumbed to organ failure the previous Thanksgiving. Amidst her grief, Henle turned to an unconventional source of comfort: artificial intelligence. Leveraging OpenAI's ChatGPT, she crafted a "ghostbot" of her mother, infusing it with their shared text messages to simulate conversations that echoed her mother's voice and wisdom. This innovative approach to coping with her loss proved to be a source of solace for Henle, a Florida-based AI trainer accustomed to the potential of technology to mimic human interactions.</p>
-          <br></br>
-          <p>Henle's experience is situated within the burgeoning landscape of "grief tech," a niche but rapidly expanding field that intersects technology and bereavement support. Startups like Replika, HereAfter AI, StoryFile, and Seance AI are at the forefront of this movement, offering a variety of services designed to help individuals navigate their grief. These platforms employ deep learning and large language models to recreate the essence of lost loved ones, providing interactive video conversations, virtual avatars for texting, and audio legacies that aim to preserve the memory and presence of the deceased.</p>
-          <br></br>
-          <p>Despite the comfort these technologies offer to those like Henle, they also usher in a host of ethical and psychological dilemmas. Questions about the consent of the deceased, the potential for psychological dependency on digital avatars, and the risks of exacerbating grief through artificial prolongation of relationships are at the heart of the debate. Furthermore, the commercialization of grief, with services ranging from affordable subscriptions to premium packages, raises concerns about the exploitation of vulnerable individuals seeking closure.</p>
-          <br></br>
-          Summary adapted from article previously published in Vox News.
+            <p>In the spring of 2023, Sunshine Henle found herself grappling with the profound loss of her 72-year-old mother, who succumbed to organ failure the previous Thanksgiving. Amidst her grief, Henle turned to an unconventional source of comfort: artificial intelligence. Leveraging OpenAI's ChatGPT, she crafted a "ghostbot" of her mother, infusing it with their shared text messages to simulate conversations that echoed her mother's voice and wisdom. This innovative approach to coping with her loss proved to be a source of solace for Henle, a Florida-based AI trainer accustomed to the potential of technology to mimic human interactions.</p>
+            <br></br>
+            <p>Henle's experience is situated within the burgeoning landscape of "grief tech," a niche but rapidly expanding field that intersects technology and bereavement support. Startups like Replika, HereAfter AI, StoryFile, and Seance AI are at the forefront of this movement, offering a variety of services designed to help individuals navigate their grief. These platforms employ deep learning and large language models to recreate the essence of lost loved ones, providing interactive video conversations, virtual avatars for texting, and audio legacies that aim to preserve the memory and presence of the deceased.</p>
+            <br></br>
+            <p>Despite the comfort these technologies offer to those like Henle, they also usher in a host of ethical and psychological dilemmas. Questions about the consent of the deceased, the potential for psychological dependency on digital avatars, and the risks of exacerbating grief through artificial prolongation of relationships are at the heart of the debate. Furthermore, the commercialization of grief, with services ranging from affordable subscriptions to premium packages, raises concerns about the exploitation of vulnerable individuals seeking closure.</p>
+            <br></br>
+            Summary adapted from article previously published in Vox News.
           </h5>
 
 
 
-          
+
         </CardContent>
         <CardFooter>
           <div className="space-y-4 w-full"> {/* Adjust the spacing here as needed */}
@@ -266,22 +284,22 @@ const Page = ({ params }: { params: { gameId: string } }) => {
 
             {/* Comment section on one line */}
             <ul>
-              <CommentSection gameId={gameId} groupName={groupName} key={refreshKey}/>
+              <CommentSection gameId={gameId} groupName={groupName} key={refreshKey} />
             </ul>
 
             {/* Input and Button on the same line */}
             <div className="flex w-full items-center space-x-2 ">
-  <Input
-    type="text"
-    placeholder={activeBool ? "Wait your turn..." : "Write what you think!"}
-    value={comment}
-    className="flex-grow" // Make the input flexible to fill available space
-    onChange={(e) => setComment(e.target.value)}
-  />
-  <Button type="button" onClick={handleSubmit} className="flex-shrink-0" disabled={activeBool}>
-    Submit
-  </Button>
-</div>
+              <Input
+                type="text"
+                placeholder={activeBool ? "Wait your turn..." : "Write what you think!"}
+                value={comment}
+                className="flex-grow" // Make the input flexible to fill available space
+                onChange={(e) => setComment(e.target.value)}
+              />
+              <Button type="button" onClick={handleSubmit} className="flex-shrink-0" disabled={activeBool}>
+                Submit
+              </Button>
+            </div>
           </div>
         </CardFooter>
       </Card>
