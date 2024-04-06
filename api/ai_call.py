@@ -84,38 +84,46 @@ class handler(BaseHTTPRequestHandler):
         new_comment_index = len(ordered_comments)
         new_comment_prompt = "Comment " + str(new_comment_index) + " Text: "
         prompt += new_comment_prompt
+        
+        def stable_query():
+            openai.api_key = os.getenv('OPENAI_API_KEY')
+            response = openai.ChatCompletion.create(model="gpt-3.5-turbo",
+                                                messages=[{"role": "system", "content": ""},
+                                                    {"role": "user", "content": prompt}], max_tokens=50)
+            return response["choices"][0]["message"]["content"]
+        
+        def hugging_face_query(url):
+            generated_comment = "No Comment Generated"
+            api_url = url
+            hfapikey = os.getenv('HF_API_KEY')
+            headers = {"Authorization": "Bearer "+hfapikey}
+            payload = {
+                "inputs": prompt,
+                "parameters": { 
+                    "max_length": 50,
+                    "return_full_text": False,
+                },
+            }
+            pre_generated = requests.post(api_url, headers=headers, json=payload).json()
+            if pre_generated != list(): #ERROR CASE! will query stable, and log incident in game notes
+                print("BACKUP: will query stable API GPT-3.5 ... and LOG. ")
+                generated_comment = stable_query()
+                path = f'games/{game_id}/groups/{group_no}/users/AI'
+                error_log_path = f'games/{game_id}/groups/{group_no}/users/AI/error_log'
+                db.reference(error_log_path).set(str(pre_generated))
+            else:
+                generated_comment = pre_generated[0]['generated_text']
+            return generated_comment
+            
+            
 
         if model == "GPT-2":
-            API_URL = "https://api-inference.huggingface.co/models/openai-community/gpt2"
-            hfapikey = os.getenv('HF_API_KEY')
-            headers = {"Authorization": "Bearer "+hfapikey}
-            payload = {
-                "inputs": prompt,
-                "parameters": { 
-                    "max_length": 50,
-                    "return_full_text": False,
-                },
-            }
-            pre_generated = requests.post(API_URL, headers=headers, json=payload).json()
-            recieved_text = pre_generated[0]['generated_text']
-            #start_index = recieved_text.find(new_comment_prompt)+len(new_comment_prompt)   
-            generated_comment = recieved_text#[start_index:]
+            api_url = "https://api-inference.huggingface.co/models/openai-community/gpt2"
+            generated_comment = hugging_face_query(api_url)
 
         elif model == "LLAMA2":
-            API_URL = "https://api-inference.huggingface.co/models/meta-llama/Llama-2-7b-chat-hf"
-            hfapikey = os.getenv('HF_API_KEY')
-            headers = {"Authorization": "Bearer "+hfapikey}
-            payload = {
-                "inputs": prompt,
-                "parameters": { 
-                    "max_length": 50,
-                    "return_full_text": False,
-                },
-            }
-            pre_generated = requests.post(API_URL, headers=headers, json=payload).json()
-            recieved_text = pre_generated[0]['generated_text']
-            #start_index = recieved_text.find(new_comment_prompt)+len(new_comment_prompt)     
-            generated_comment = recieved_text#[start_index:]
+            api_url = "https://api-inference.huggingface.co/models/meta-llama/Llama-2-7b-chat-hf"
+            generated_comment = hugging_face_query(api_url)
             
         elif model == "GPT-3.5":
             openai.api_key = os.getenv('OPENAI_API_KEY')
