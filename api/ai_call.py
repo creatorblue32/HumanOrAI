@@ -79,7 +79,11 @@ class handler(BaseHTTPRequestHandler):
         prompt += "Comment Section:"
         
         for index,comment in enumerate(ordered_comments):
-            prompt += ("Comment " + str(index) + ": " + comment)
+            prompt += ("Comment " + str(index) + " Text: " + comment)
+        
+        new_comment_index = len(ordered_comments)
+        new_comment_prompt = "Comment " + str(new_comment_index) + " Text: "
+        prompt += new_comment_prompt
 
         if model == "GPT-2":
             API_URL = "https://api-inference.huggingface.co/models/openai-community/gpt2"
@@ -93,7 +97,7 @@ class handler(BaseHTTPRequestHandler):
             }
             pre_generated = requests.post(API_URL, headers=headers, json=payload).json()
             recieved_text = pre_generated[0]['generated_text']
-            start_index = recieved_text.find("Comment 1 Text:")+15     
+            start_index = recieved_text.find(new_comment_prompt)+len(new_comment_prompt)   
             generated_comment = recieved_text[start_index:]
 
         elif model == "LLAMA2":
@@ -108,7 +112,7 @@ class handler(BaseHTTPRequestHandler):
             }
             pre_generated = requests.post(API_URL, headers=headers, json=payload).json()
             recieved_text = pre_generated[0]['generated_text']
-            start_index = recieved_text.find("Comment 1 Text:")+15     
+            start_index = recieved_text.find(new_comment_prompt)+len(new_comment_prompt)     
             generated_comment = recieved_text[start_index:]
             
         elif model == "GPT-3.5":
@@ -141,9 +145,6 @@ class handler(BaseHTTPRequestHandler):
         
         self.send_response(200)
         self.send_header('Content-type', 'text/json')        
-        self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate')
-        self.send_header('Pragma', 'no-cache')
-        self.send_header('Expires', '0')
         self.end_headers()
 
         
