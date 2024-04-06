@@ -40,7 +40,6 @@ class handler(BaseHTTPRequestHandler):
         game_id = query_params.get('gameId', [''])[0]
         group_no = query_params.get('groupNo', [''])[0]
 
-        model = db.reference('/games/'+str(game_id)+"/groups/"+str(group_no)+"/model").get()
 
         #model = query_params.get('model', [''])[0]
         
@@ -51,12 +50,11 @@ class handler(BaseHTTPRequestHandler):
         else:
             firebase_app = firebase_admin.get_app()
 
-
-        #Functionality
-        #Get Inorder Comments
-        #Query API
         
         success = False
+
+        model = db.reference('/games/'+str(game_id)+"/groups/"+str(group_no)+"/model").get()
+
 
         path = f'games/{game_id}/groups/{group_no}/users'
         ref = db.reference(path)
@@ -121,6 +119,24 @@ class handler(BaseHTTPRequestHandler):
             generated_comment = response["choices"][0]["message"]["content"][1:len(generated_comment)-2]
         else:
             generated_comment += model
+            
+        dbref = db.reference(f"games/{game_id}/groups/{group_no}/users/AI/comment")
+        dbref.set(generated_comment)
+
+        #MUST SET NEXT PLAYER TO ACTIVE
+        dbseqref = db.reference(f'games/{game_id}/groups/{group_no}/sequence')
+        dbseq = dbseqref.get()
+        list = dbseq.split(",")
+        newIndex = list.index("AI")
+        if (newIndex >= len(list)-1):
+            stateref = db.reference(f'games/{game_id}/groups/{group_no}/status')
+            stateref.set("voting")
+
+        else:
+            nextUserId = list[newIndex+1]
+            nextUserRef = db.reference(f'games/{game_id}/groups/{group_no}/users/{nextUserId}/state')
+            nextUserRef.set("active")
+
                         
         
         self.send_response(200)
