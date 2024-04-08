@@ -10,6 +10,7 @@ import { useSearchParams } from 'next/navigation'
 
 
 
+
 const Page = ({ params }: { params: { gameId: string, groupName: string } }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
