@@ -16,7 +16,7 @@ import NumberCircle from "@/components/NumberCircle"
 
 // Define a type for the component props if needed, e.g., if gameId and groupName are passed as props
 interface instructionsProps {
-    gameId: string;
+    gameId: string | null;
 }
 
 const Instructions: React.FC<instructionsProps> = ({ gameId }) => {

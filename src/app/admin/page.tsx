@@ -30,7 +30,7 @@ export default function Page() {
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
         <AdminDashboard initialGameId={gameId} onGameIdUpdate={updateGameId} />
         <div className="m-4"></div>
-        <Instructions gameId={placeHolderGameId} />
+        <Instructions gameId={gameId} />
       </div>
 
       {/* Footer */}
