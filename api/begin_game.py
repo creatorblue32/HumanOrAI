@@ -119,6 +119,7 @@ class handler(BaseHTTPRequestHandler):
                 groupFormatted["sequence"] = sequence
                 groupFormatted["commentsequence"] = ""
                 groupFormatted["status"] = "active"
+                groupFormatted["ai_comment_index"] = None
                 groups[groupNo] = groupFormatted
                 modelIndex += 1
                 if modelIndex >= len(models):
