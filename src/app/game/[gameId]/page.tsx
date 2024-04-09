@@ -107,6 +107,7 @@ const Page = ({ params }: { params: { gameId: string } }) => {
       } else {
         console.log("Updated to false.");
       }
+      alert("It's your time to leave a comment! Once you're finished reading, head down to the comment section to let us know what you think.");
       setActiveBool(playerStatus !== "active");
     };
 
