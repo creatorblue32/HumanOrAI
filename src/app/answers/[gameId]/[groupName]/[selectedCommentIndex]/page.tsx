@@ -53,7 +53,7 @@ const Page: React.FC<PageProps> = ({ params }) => {
         setStatusMessage("You got it correct!");
         setCommentStyles({[aiCommentIndex]: 'bg-green-500'});
       } else {
-        setStatusMessage("That's not quite right. You got fooled!" + selectedCommentIndex + String(aiCommentIndex));
+        setStatusMessage("That's not quite right. You got fooled!");
         setCommentStyles({
           [parseInt(selectedCommentIndex, 10)]: 'bg-red-500',
           [aiCommentIndex]: 'bg-green-500'
