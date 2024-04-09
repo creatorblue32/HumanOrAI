@@ -139,7 +139,7 @@ class handler(BaseHTTPRequestHandler):
 
         duplicate_comments = generated_comment.find("Comment ")
         if duplicate_comments != -1:
-            generated_comment = generated_comment[:duplicate_comments + len("Comment ")]
+            generated_comment = generated_comment[:duplicate_comments ]
 
             
         dbref = db.reference(f"games/{game_id}/groups/{group_no}/users/AI/comment")
