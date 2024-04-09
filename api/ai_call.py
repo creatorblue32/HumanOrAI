@@ -137,6 +137,10 @@ class handler(BaseHTTPRequestHandler):
             db.reference(error_log_path).set("Unknown Model Name.")
             generated_comment += stable_query()
 
+        duplicate_comments = generated_comment.find("Comment ")
+        if duplicate_comments != -1:
+            generated_comment = generated_comment[:duplicate_comments + len("Comment ")]
+
             
         dbref = db.reference(f"games/{game_id}/groups/{group_no}/users/AI/comment")
         dbref.set(generated_comment)
