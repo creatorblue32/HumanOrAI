@@ -12,6 +12,7 @@ export default function Page() {
   const [gameId, setGameId] = useState<string | null>(null);
 
   const updateGameId = (newGameId: string) => {
+    console.log("YESS IT'S HAPPENING!")
     setGameId(newGameId);
   };
 
