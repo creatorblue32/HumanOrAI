@@ -46,7 +46,10 @@ const Page: React.FC<PageProps> = ({ params }) => {
     const aiCommentIndexRef = ref(database, `games/${gameId}/groups/${groupName}/ai_comment_index`);
     onValue(aiCommentIndexRef, (snapshot) => {
       const aiCommentIndex = snapshot.val();
-      if (aiCommentIndex === parseInt(selectedCommentIndex, 10)) {
+      if (aiCommentIndex == null) {
+        console.log("No problem... waiting!");
+      }
+      else if (aiCommentIndex === parseInt(selectedCommentIndex, 10)) {
         setStatusMessage("You got it correct!");
         setCommentStyles({[aiCommentIndex]: 'bg-green-500'});
       } else {
