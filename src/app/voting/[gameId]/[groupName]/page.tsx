@@ -84,7 +84,7 @@ const Page: React.FC<PageProps> = ({ params }) => {
 
   return (
     <div>
-      <Card>
+      <Card className='m-5'>
         <CardHeader>
           <h1 className="text-xl">Which one do you think is AI?</h1>
           <h2>Comments</h2>

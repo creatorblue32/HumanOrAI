@@ -162,6 +162,15 @@ interface AdminDashboardProps {
         }
     };
 
+    const revealAnswers = async () => {
+        console.log("Revealing Answers...")
+        try {
+            const response = await fetch('https://humanoraime.vercel.app/api/reveal?gameId='+ gameId);
+            const data = await response.json();
+        } catch (error) {
+            console.error('Error revealing answers:', error);
+        }
+    };
 
 
     return (
@@ -190,10 +199,10 @@ interface AdminDashboardProps {
                                 <div className="text-slate-500">Begin Play</div>
                             </div>
                         </Button>
-                        <Button variant="secondary" disabled={game_status != Status.Active} className="h-[100px] mr-2" onClick={createGame}>
+                        <Button variant="secondary" disabled={game_status != Status.Active} className="h-[100px] mr-2" onClick={revealAnswers}>
                             <div className="flex flex-col items-center justify-center h-screen">
                                 <div className="mb-2 "><Vote className="stroke-slate-500" /></div>
-                                <div className="text-slate-500">Start Voting</div>
+                                <div className="text-slate-500">Reveal Answers</div>
                             </div>
                         </Button>
                         <Button variant="secondary" disabled={game_status != Status.Voting} className="h-[100px] mr-2" onClick={createGame}>
