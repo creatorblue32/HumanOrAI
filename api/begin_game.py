@@ -87,7 +87,7 @@ class handler(BaseHTTPRequestHandler):
             blank_user = {"state": "waiting", "comment": "", "vote":""}
 
             #Handle Model Assignment
-            models = ["GPT-2","GPT-4","LLAMA","LLAMA-2","Gemini"]
+            models = ["GPT-2","GPT-3.5","LLAMA","LLAMA-2","Gemini"]
             modelIndex = 0
 
 

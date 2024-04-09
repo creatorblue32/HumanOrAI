@@ -133,7 +133,10 @@ class handler(BaseHTTPRequestHandler):
                                                     {"role": "user", "content": prompt}], max_tokens=50)
             generated_comment = response["choices"][0]["message"]["content"]
         else:
-            generated_comment += model
+            error_log_path = f'games/{game_id}/groups/{group_no}/users/AI/error_log'
+            db.reference(error_log_path).set("Unknown Model Name.")
+            generated_comment += stable_query()
+
             
         dbref = db.reference(f"games/{game_id}/groups/{group_no}/users/AI/comment")
         dbref.set(generated_comment)
