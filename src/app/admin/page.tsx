@@ -1,5 +1,6 @@
 // src/pages/page.tsx
 import LogoComponent from '@/components/LogoComponent';
+import React, { useState } from 'react';
 import Instructions from '@/components/Instructions';
 import Head from 'next/head';
 import AdminDashboard from '@/components/AdminDashboard';
@@ -7,8 +8,13 @@ import AdminDashboard from '@/components/AdminDashboard';
 
 export default function Page() {
 
-  const gameId = null;
-  const placeHolderGameId = "4023";
+  const placeHolderGameId = "----";
+  const [gameId, setGameId] = useState<string | null>(null);
+
+  const updateGameId = (newGameId: string) => {
+    setGameId(newGameId);
+  };
+
 
   return (
     <div>
@@ -21,7 +27,7 @@ export default function Page() {
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-      <AdminDashboard initialGameId={gameId}/>
+      <AdminDashboard initialGameId={gameId} onGameIdUpdate={updateGameId} />
       <div className="m-4"></div>
         <Instructions gameId={placeHolderGameId} />
       </div>

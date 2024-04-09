@@ -46,6 +46,8 @@ interface GroupsGridProps {
     groups: Group[];
 }
 
+
+
 const GroupsGrid: React.FC<GroupsGridProps> = ({ groups }) => {
     return (
         <div className="grid grid-cols-4 ">
@@ -74,11 +76,13 @@ enum Status {
 
 
 // Define a type for the component props if needed, e.g., if gameId and groupName are passed as props
-interface adminProps {
-    initialGameId: string | null; // Allow gameId to be null
-}
+interface AdminDashboardProps {
+    initialGameId: string | null;
+    onGameIdUpdate: (newGameId: string) => void;
+  }
+  
 
-const AdminDashboard: React.FC<adminProps> = ({ initialGameId }) => {
+  const AdminDashboard: React.FC<AdminDashboardProps> = ({ initialGameId, onGameIdUpdate }) => {
     // Define a CSS class for greyed-out content
     const greyedOutClass = "text-gray-200";
 
@@ -108,6 +112,7 @@ const AdminDashboard: React.FC<adminProps> = ({ initialGameId }) => {
             if (data.gameId) {
                 setGameId(data.gameId);
                 set_game_status(Status.Open);
+                onGameIdUpdate(data.gameId);
             } else {
                 console.error('Game ID not received');
             }
