@@ -1,4 +1,4 @@
-// src/pages/page.tsx
+"use client";
 import LogoComponent from '@/components/LogoComponent';
 import React, { useState } from 'react';
 import Instructions from '@/components/Instructions';
@@ -27,15 +27,15 @@ export default function Page() {
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-      <AdminDashboard initialGameId={gameId} onGameIdUpdate={updateGameId} />
-      <div className="m-4"></div>
+        <AdminDashboard initialGameId={gameId} onGameIdUpdate={updateGameId} />
+        <div className="m-4"></div>
         <Instructions gameId={placeHolderGameId} />
       </div>
 
       {/* Footer */}
       <div className="bg-white w-full h-12 fixed bottom-0 z-10 shadow-md">
         <div className="flex justify-center items-center h-full">
-<h2 className="text-xs text-gray-400">created by: creatorblue32</h2>
+          <h2 className="text-xs text-gray-400">created by: creatorblue32</h2>
         </div>
       </div>
     </div>

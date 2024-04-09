@@ -1,3 +1,4 @@
+"use client;"
 import { useEffect, useState } from "react";
 import { ref, get, child } from "firebase/database";
 import database from "../lib/firebaseConfig";
@@ -34,7 +35,7 @@ const Instructions: React.FC<instructionsProps> = ({ gameId }) => {
                 <CardTitle className=" mt-6">Instructions to Join:</CardTitle>
  
                 <NumberCircle number={1} text="Scan the QR code below or type in the link:"/>
-                <h1 className="text-2xl ml-2 font-semibold">convoedu.vercel.app</h1>
+                <h1 className="text-xl ml-2 font-semibold">humanoraime.vercel.app</h1>
                     <img src='/images/joinqr.png' alt="Article Image" style={{ borderRadius: '6px' , width: '250px', height:'auto'}}></img>
                     <NumberCircle number={2} text="Enter the game code below: "/>
                     <h1 className="text-8xl font-semibold">{gameId}</h1>
