@@ -27,14 +27,37 @@ async function fetchComments(gameId: string, groupName: string): Promise<string[
   const dbRef = ref(database);
   let commentsArray: string[] = [];
   try {
-    const path = `games/${gameId}/groups/${groupName}/users`;
-    const snapshot = await get(child(dbRef, path));
-
-    if (snapshot.exists()) {
-      const users = snapshot.val();
-      commentsArray = Object.values(users).map((user: any) => user.comment);
+    // Fetch the sequence string
+    const sequencePath = `games/${gameId}/groups/${groupName}/sequence`;
+    const sequenceSnapshot = await get(child(dbRef, sequencePath));
+    let userIdOrder: string[] = [];
+    
+    if (sequenceSnapshot.exists()) {
+      // Split the sequence string to get an ordered array of user IDs
+      userIdOrder = sequenceSnapshot.val().split(',');
     } else {
-      console.log("No data available");
+      console.log("No sequence data available");
+      return commentsArray; // Return early if no sequence is found
+    }
+
+    // Fetch user comments as before
+    const usersPath = `games/${gameId}/groups/${groupName}/users`;
+    const usersSnapshot = await get(child(dbRef, usersPath));
+
+    if (usersSnapshot.exists()) {
+      const users = usersSnapshot.val();
+      // Initialize an empty object to hold userId-comment pairs
+      const userIdComments: { [key: string]: string } = {};
+
+      // Populate the userIdComments object
+      Object.values(users).forEach((user: any) => {
+        userIdComments[user.userId] = user.comment;
+      });
+
+      // Arrange comments according to the sequence
+      commentsArray = userIdOrder.map(userId => userIdComments[userId]).filter(comment => comment !== undefined);
+    } else {
+      console.log("No user data available");
     }
   } catch (error) {
     console.error("Error fetching data:", error);

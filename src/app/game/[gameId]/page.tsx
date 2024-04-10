@@ -104,10 +104,11 @@ const Page = ({ params }: { params: { gameId: string } }) => {
         console.log(fetchedComments);
         setComments(fetchedComments); // Update the comments state with fetched comments
         console.log("Updated Active Bool to True");
+        alert("It's your turn to leave a comment! Once you're finished reading, head down to the comment section to let us know what you think.");
       } else {
+        alert("Hey there! Check out this article. In a couple minutes, you'll be prompted to leave a comment. We'll let you know when it's your turn!");
         console.log("Updated to false.");
       }
-      alert("It's your time to leave a comment! Once you're finished reading, head down to the comment section to let us know what you think.");
       setActiveBool(playerStatus !== "active");
     };
 

@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { getDatabase, ref, onValue } from 'firebase/database';
+import { getDatabase, ref,get, child, onValue } from 'firebase/database';
 import database from "../../../../../lib/firebaseConfig";
 import {
   Card,
@@ -21,6 +21,49 @@ interface PageProps {
   params: Params;
 }
 
+async function fetchComments(gameId: string, groupName: string): Promise<string[]> {
+  const dbRef = ref(database);
+  let commentsArray: string[] = [];
+  try {
+    // Fetch the sequence string
+    const sequencePath = `games/${gameId}/groups/${groupName}/sequence`;
+    const sequenceSnapshot = await get(child(dbRef, sequencePath));
+    let userIdOrder: string[] = [];
+    
+    if (sequenceSnapshot.exists()) {
+      // Split the sequence string to get an ordered array of user IDs
+      userIdOrder = sequenceSnapshot.val().split(',');
+    } else {
+      console.log("No sequence data available");
+      return commentsArray; // Return early if no sequence is found
+    }
+
+    // Fetch user comments as before
+    const usersPath = `games/${gameId}/groups/${groupName}/users`;
+    const usersSnapshot = await get(child(dbRef, usersPath));
+
+    if (usersSnapshot.exists()) {
+      const users = usersSnapshot.val();
+      // Initialize an empty object to hold userId-comment pairs
+      const userIdComments: { [key: string]: string } = {};
+
+      // Populate the userIdComments object
+      Object.values(users).forEach((user: any) => {
+        userIdComments[user.userId] = user.comment;
+      });
+
+      // Arrange comments according to the sequence
+      commentsArray = userIdOrder.map(userId => userIdComments[userId]).filter(comment => comment !== undefined);
+    } else {
+      console.log("No user data available");
+    }
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+  return commentsArray;
+}
+
+
 const Page: React.FC<PageProps> = ({ params }) => {
   const [comments, setComments] = useState<string[]>([]);
   const [statusMessage, setStatusMessage] = useState<string>("Thanks for submitting... wait for your teacher to reveal the answers!");
@@ -28,21 +71,20 @@ const Page: React.FC<PageProps> = ({ params }) => {
   const { gameId, groupName, selectedCommentIndex } = params;
 
   useEffect(() => {
-    const fetchComments = () => {
-      const path = `games/${gameId}/groups/${groupName}/users`;
-      const dbRef = ref(database, path);
-      onValue(dbRef, (snapshot) => {
-        if (snapshot.exists()) {
-          const users = snapshot.val();
-          const newComments = Object.values(users).map((user: any) => user.comment);
-          setComments(newComments);
-        } else {
-          console.log("No data available");
-        }
-      });
+    const loadComments = async () => {
+      try {
+        // Await the fetchComments function to get the actual comments array
+        const commentsArray = await fetchComments(gameId, groupName);
+        // Then set the state with the resolved value
+        setComments(commentsArray);
+      } catch (error) {
+        console.error("Failed to load comments:", error);
+        // Optionally, set an error message or handle the error in another way
+        setStatusMessage("Failed to load comments.");
+      }
     };
+    loadComments();
 
-    fetchComments();
     const aiCommentIndexRef = ref(database, `games/${gameId}/groups/${groupName}/ai_comment_index`);
     onValue(aiCommentIndexRef, (snapshot) => {
       const aiCommentIndex = snapshot.val();
