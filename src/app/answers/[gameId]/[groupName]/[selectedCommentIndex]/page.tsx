@@ -52,8 +52,9 @@ async function fetchComments(gameId: string, groupName: string): Promise<string[
         userIdComments[user.userId] = user.comment;
       });
 
-      // Arrange comments according to the sequence
       commentsArray = userIdOrder.map(userId => userIdComments[userId]).filter(comment => comment !== undefined);
+      console.log("Got em!");
+      console.log(commentsArray);
     } else {
       console.log("No user data available");
     }
