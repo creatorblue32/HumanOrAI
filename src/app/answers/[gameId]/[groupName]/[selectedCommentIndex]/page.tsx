@@ -51,7 +51,7 @@ async function fetchComments(gameId: string, groupName: string): Promise<string[
       Object.values(users).forEach((user: any) => {
         userIdComments[user.userId] = user.comment;
       });
-
+      console.log(userIdOrder);
       commentsArray = userIdOrder.map(userId => userIdComments[userId]).filter(comment => comment !== undefined);
       console.log("Got em!");
       console.log(commentsArray);
@@ -73,6 +73,7 @@ const Page: React.FC<PageProps> = ({ params }) => {
 
   useEffect(() => {
     const loadComments = async () => {
+      console.log("Try!");
       try {
         // Await the fetchComments function to get the actual comments array
         const commentsArray = await fetchComments(gameId, groupName);
