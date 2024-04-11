@@ -8,6 +8,7 @@ from urllib import parse
 import requests
 import openai
 import builtins
+import google.generativeai as genai
 
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -133,11 +134,11 @@ class handler(BaseHTTPRequestHandler):
                                                     {"role": "user", "content": prompt}], max_tokens=50)
             generated_comment = response["choices"][0]["message"]["content"]
         elif model == "GEMINI":
-            openai.api_key = os.getenv('OPENAI_API_KEY')
-            response = openai.ChatCompletion.create(model="gpt-3.5-turbo",
-                                                messages=[{"role": "system", "content": ""},
-                                                    {"role": "user", "content": prompt}], max_tokens=50)
-            generated_comment = response["choices"][0]["message"]["content"]
+            genai.configure(api_key=os.getenv('GOOGLE_API_KEY'))
+            model = genai.GenerativeModel('gemini-pro')
+            genai.GenerationConfig(max_output_tokens=50)
+            response = model.generate_content(prompt)
+            generated_comment = response.text
         else:
             error_log_path = f'games/{game_id}/groups/{group_no}/users/AI/error_log'
             db.reference(error_log_path).set("Unknown Model Name.")
