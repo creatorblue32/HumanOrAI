@@ -38,19 +38,28 @@ async function fetchComments(gameId: string, groupName: string): Promise<string[
       return commentsArray; // Return early if no sequence is found
     }
 
-    // Fetch user comments as before
     const usersPath = `games/${gameId}/groups/${groupName}/users`;
     const usersSnapshot = await get(child(dbRef, usersPath));
-
+    console.log("USERS:");
+    console.log(usersSnapshot.val());
+  
     if (usersSnapshot.exists()) {
       const users = usersSnapshot.val();
       // Initialize an empty object to hold userId-comment pairs
       const userIdComments: { [key: string]: string } = {};
-
+  
       // Populate the userIdComments object
-      Object.values(users).forEach((user: any) => {
-        userIdComments[user.userId] = user.comment;
+      Object.entries(users).forEach(([userId, user]: [string, any]) => {
+        console.log("NEW USER / COMMENT PAIR:");
+        console.log(userId);
+        console.log(user.comment);
+        userIdComments[userId] = user.comment;
       });
+  
+      console.log("UserId Map");
+      console.log(userIdComments);
+
+
       console.log(userIdOrder);
       commentsArray = userIdOrder.map(userId => userIdComments[userId]).filter(comment => comment !== undefined);
       console.log("Got em!");
@@ -97,7 +106,7 @@ const Page: React.FC<PageProps> = ({ params }) => {
         setStatusMessage("You got it correct!");
         setCommentStyles({[aiCommentIndex]: 'bg-green-500'});
       } else {
-        setStatusMessage("That's not quite right. You got fooled!");
+        setStatusMessage("That's not quite right. You got fooled! (the green comment is AI)");
         setCommentStyles({
           [parseInt(selectedCommentIndex, 10)]: 'bg-red-500',
           [aiCommentIndex]: 'bg-green-500'
