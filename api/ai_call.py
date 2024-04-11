@@ -127,6 +127,10 @@ class handler(BaseHTTPRequestHandler):
             api_url = "https://api-inference.huggingface.co/models/meta-llama/Llama-2-7b-chat-hf"
             generated_comment = hugging_face_query(api_url)
             
+        elif model == "MISTRAL":
+            api_url = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-v0.1"
+            generated_comment = hugging_face_query(api_url)
+        
         elif model == "GPT-3.5":
             openai.api_key = os.getenv('OPENAI_API_KEY')
             response = openai.ChatCompletion.create(model="gpt-3.5-turbo",
